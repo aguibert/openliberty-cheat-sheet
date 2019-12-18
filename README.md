@@ -1,11 +1,11 @@
 # Open Liberty Cheat Sheet
 
-View it on github pages (not here)
+View it on github pages here: https://aguibert.github.io/liberty-cheat-sheet/
 
-To build it locally:
+To contribute or build it locally:
 
 ```
 $ brew install asciidoctor
-$ asciidoctor -a toc=left docs/cheat-sheet.adoc
-$ open docs/cheat-sheet.html
+$ asciidoctor -a toc=left docs/index.adoc
+$ open docs/index.html
 ```
