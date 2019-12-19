@@ -36,7 +36,8 @@ https://openliberty.io/[OpenLiberty] is a lightweight open framework for buildin
 
 Generate a basic Liberty project using Maven:
 
-```
+[source]
+----
 mvn archetype:generate \
     -DarchetypeGroupId=io.openliberty.tools \
     -DarchetypeArtifactId=liberty-archetype-webapp \
@@ -44,11 +45,12 @@ mvn archetype:generate \
     -DgroupId=org.example \
     -DartifactId=liberty-app \
     -Dversion=1.0-SNAPSHOT
-```
+----
 
 This creates a Maven project with a simple Servlet class in it:
 
-```java
+[source,java]
+----
 @WebServlet(urlPatterns="/servlet")
 public class HelloServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -61,12 +63,14 @@ public class HelloServlet extends HttpServlet {
         doGet(request, response);
     }
 }
-```
+----
 
 You can start the application in "dev mode" using the command:
-```
+
+[source]
+----
 mvn liberty:dev
-```
+----
 
 Then open a web browser to http://localhost:9080/test/servlet to access the Servlet. To run unit and integration tests, press the `Enter` key. To exit dev mode press `Ctrl+C`.
 
@@ -76,7 +80,8 @@ A more detailed Getting Started walkthrough can be found in the https://openlibe
 
 The primary source of configuration for a Liberty server is the `server.xml` file. In most projects it is located at `src/main/liberty/config/server.xml` and might look like this:
 
-```xml
+[source,xml]
+----
 <server>
     <featureManager>
         <feature>servlet-4.0</feature>
@@ -86,7 +91,7 @@ The primary source of configuration for a Liberty server is the `server.xml` fil
     
     <webApplication location="test.war" name="test"/>
 </server>
-```
+----
 
 For more info see: https://openliberty.io/docs/ref/feature/[OpenLiberty server configuration overview]
 
@@ -106,15 +111,17 @@ Server configuration can be parameterized using variables. When resolving variab
 
 Variables are referenced using `${variableName}` syntax. In server config, specify variables using the variable element:
 
-```xml
+[source,xml]
+----
 <variable name="variableName" value="some.value" />
-```
+----
 
 Default values, specified in server config, are only used if no other value can be found. They are specified using the variable element and the `defaultValue` attribute:
 
-```xml
+[source,xml]
+----
 <variable name="DB_SERVER" defaultValue="localhost"/>
-```
+----
 
 === Predefined Variables
 
@@ -134,14 +141,16 @@ If you are running your application in Kubernetes, you don't want to have creden
 
 First, configure a Kubernetes secret, for example `database-credentials` with the contents:
 
-```
+[source]
+----
 my-app.db.username=dbUser
 my-app.db.password=dbPass
-``` 
+----
 
 Then, you can inject the Kubernetes secret contents into a a `boostrap.properties` file that contains sensitive information as follows:
 
-```yaml
+[source,yaml]
+----
 kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
@@ -160,17 +169,18 @@ spec:
       - name: database-credentials-volume
         secret:
           secretName: database-credentials
-```
+----
 
 Finally, the secrets can then be referenced in server configuration using variables:
 
-```xml
+[source,xml]
+----
   <dataSource ...>
     <properties ...
         user="${my-app.db.username}"
         password="${my-app.db.password}"/>
   </dataSource>
-```
+----
 
 == Features
 
@@ -212,13 +222,14 @@ A complete list of all Liberty features can be found here: https://openliberty.i
 
 Add the maven plugin to your pom.xml file:
 
-```xml
+[source,xml]
+----
 <plugin>
     <groupId>io.openliberty.tools</groupId>
     <artifactId>liberty-maven-plugin</artifactId>
     <version>3.1</version>
 </plugin>
-```
+----
 
 Some of the essential maven commands are:
 
@@ -236,7 +247,8 @@ Also see:
 
 Add the following snippet to your build.gradle file:
 
-```groovy
+[source,groovy]
+----
 buildscript {
     repositories {
         mavenCentral()
@@ -252,7 +264,7 @@ apply plugin: 'liberty'
 dependencies {
     libertyRuntime group:'io.openliberty', name:'openliberty-runtime', version:'19.0.0.12'
 }
-```
+----
 
 Some of the essential gradle tasks are:
 
@@ -269,7 +281,8 @@ Also see:
 
 The basic Liberty Dockerfile looks like this:
 
-```
+[source]
+----
 FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
 ADD target/myApp.war /config/dropins
@@ -278,7 +291,7 @@ ADD target/myApp.war /config/dropins
 # container start time. You may not want to run this for local development if
 # you are constantly changing the app layer, but should used for production
 RUN configure.sh
-```
+----
 
 There are also base layers using Java 11 and 13 which can be found here: https://hub.docker.com/r/openliberty/open-liberty[OpenLiberty Docker Hub]
 
@@ -290,7 +303,8 @@ OpenLiberty is currently supported on Java SE 8, 11, and 13. Official documentat
 
 This is the most common base configuration for using a JDBC DataSource (or JPA) with Liberty:
 
-```xml
+[source,xml]
+----
 <featureManager>
     <feature>jdbc-4.2</feature>
 </featureManager>
@@ -298,11 +312,12 @@ This is the most common base configuration for using a JDBC DataSource (or JPA) 
 <library id="driver-library">
     <fileset dir="/path/to/driver/dir" includes="*.jar"/>
 </library>
-```
+----
 
 === PostgreSQL
 
-```xml
+[source,xml]
+----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
     <jdbcDriver libraryRef="driver-library"/>
     <properties.postgresql serverName="localhost" portNumber="5432"
@@ -311,22 +326,24 @@ This is the most common base configuration for using a JDBC DataSource (or JPA) 
                 password="examplePassword"/>
 
 </dataSource>
-```
+----
 
 To run a Postgres Docker container locally:
 
-```
+[source]
+----
 docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
            --name postgres-liberty \
            -e POSTGRES_USER=exampleUser \
            -e POSTGRES_PASSWORD=examplePassword \
            -e POSTGRES_DB=myDB \
            -p 5432:5432 postgres:10.5
-```
+----
 
 === IBM DB2
 
-```xml
+[source,xml]
+----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
     <jdbcDriver libraryRef="driver-library"/>
     <properties.db2.jcc serverName="localhost" portNumber="50000"
@@ -335,11 +352,12 @@ docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
                 password="examplePassword"/>
 
 </dataSource>
-```
+----
 
 To run a DB2 Docker container locally:
 
-```
+[source]
+----
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name db2-liberty \
            -e AUTOCONFIG=false -e ARCHIVE_LOGS=false -e LICENSE=accept \ 
@@ -349,11 +367,12 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            -p 50000:50000 \
            --privileged \
            ibmcom/db2:11.5.0.0a
-```
+----
 
 === Microsoft SQL Server
 
-```xml
+[source,xml]
+----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
     <jdbcDriver libraryRef="driver-library"/>
     <properties.microsoft.sqlserver serverName="localhost" portNumber="1433"
@@ -362,22 +381,24 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
                 password="examplePassw0rd"/>
 
 </dataSource>
-```
+----
 
 To run a SQL Server Docker container locally:
 
-```
+[source]
+----
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mssql-liberty \
            -e ACCEPT_EULA=Y \
            -e SA_PASSWORD=examplePass0ord \
            -p 1433:1433 \
            mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
-```
+----
 
 === MySQL
 
-```xml
+[source,xml]
+----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
     <jdbcDriver libraryRef="driver-library"/>
     <properties serverName="localhost" portNumber="3306"
@@ -385,11 +406,12 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
                 user="exampleUser"
                 password="examplePassword"/>
 </dataSource>
-```
+----
 
 To run a MySQL Docker container locally:
 
-```
+[source]
+----
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mysql-liberty \
            -e MYSQL_DATABASE=myDB \
@@ -397,16 +419,17 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            -e MYSQL_PASSWORD=examplePassword \
            -p 3306:3306 \
            mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
-```
+----
 
 === Oracle
 
-```xml
+[source,xml]
+----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
     <jdbcDriver libraryRef="driver-library"/>
     <properties.oracle URL="jdbc:oracle:thin:@//localhost:1521/myDB"/>
 </dataSource>
-```
+----
 
 == Included Open Source Components
 
