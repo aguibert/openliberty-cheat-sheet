@@ -477,11 +477,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_microsoft_sql_server">10.4. Microsoft SQL Server</a></li>
 <li><a href="#_mysql">10.5. MySQL</a></li>
 <li><a href="#_oracle">10.6. Oracle</a></li>
+<li><a href="#_derby_in_memory_db">10.7. Derby (in-memory DB)</a></li>
 </ul>
 </li>
-<li><a href="#_included_oss_components">11. Included OSS Components</a></li>
-<li><a href="#_replaceable_components">12. Replaceable Components</a></li>
-<li><a href="#_contribute_corrections">13. Contribute Corrections</a></li>
+<li><a href="#_security">11. Security</a>
+<ul class="sectlevel2">
+<li><a href="#_basic_authentication">11.1. Basic authentication</a></li>
+</ul>
+</li>
+<li><a href="#_included_oss_components">12. Included OSS Components</a></li>
+<li><a href="#_replaceable_components">13. Replaceable Components</a></li>
+<li><a href="#_contribute_corrections">14. Contribute Corrections</a></li>
 </ul>
 </div>
 </div>
@@ -1031,7 +1037,7 @@ RUN configure.sh</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
-    &lt;feature&gt;appSecurity-2.0&lt;/feature&gt;
+    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
     &lt;feature&gt;restConnector-2.0&lt;/feature&gt;
     &lt;feature&gt;jdbc-4.2&lt;/feature&gt;
 &lt;/featureManager&gt;
@@ -1180,10 +1186,75 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_derby_in_memory_db">10.7. Derby (in-memory DB)</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
+    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+    &lt;properties.derby.embedded databaseName="memory:myDB" createDatabase="create"/&gt;
+&lt;/dataSource&gt;</code></pre>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_included_oss_components">11. Included OSS Components</h2>
+<h2 id="_security">11. Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To enable security for your application, enable the <code>appSecurity-3.0</code> feature. This will cause all application endpoints requiring a role to go through HTTPS and some form of authentication.</p>
+</div>
+<div class="sect2">
+<h3 id="_basic_authentication">11.1. Basic authentication</h3>
+<div class="paragraph">
+<p>A simple form of authentication is the <code>&lt;basicRegistry&gt;</code> element, which allows you to directly configure user/password pairs.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
+&lt;/featureManager&gt;
+
+&lt;basicRegistry id="basic"&gt;
+    &lt;user name="bob" password="bobpwd"/&gt;
+&lt;/basicRegistry&gt;
+
+&lt;webApplication location="myApp.war"&gt;
+    &lt;application-bnd&gt;
+        &lt;!-- this can also be defined in web.xml instead --&gt;
+        &lt;security-role name="admin"&gt;
+            &lt;user name="bob"/&gt;
+        &lt;/security-role&gt;
+    &lt;/application-bnd&gt;
+&lt;/webApplication&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, managed resources (JAX-RS endpoints, servlets, etc) can be secured with <code>@RolesAllowed</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/")
+@ApplicationScoped
+@RolesAllowed("admin")
+public class HelloEndpoint {
+
+    @GET
+    public String sayHello() {
+        return "Hello World";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Accessing any endpoints in the <code>HelloEndpoint</code> (on <code>http</code> or <code>https</code>) will then then restrict access to a user in the <code>admin</code> role (in this case <code>bob</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_included_oss_components">12. Included OSS Components</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1278,7 +1349,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_replaceable_components">12. Replaceable Components</h2>
+<h2 id="_replaceable_components">13. Replaceable Components</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1299,7 +1370,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_contribute_corrections">13. Contribute Corrections</h2>
+<h2 id="_contribute_corrections">14. Contribute Corrections</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Find some incorrect information or want to contribute an additional section?</p>
@@ -1312,7 +1383,7 @@ RUN configure.sh</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-19 12:08:41 -0600
+Last updated 2019-12-19 15:57:44 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

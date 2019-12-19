@@ -320,7 +320,7 @@ OpenLiberty has a REST API to test database connections. To use it, add this con
 [source,xml]
 ----
 <featureManager>
-    <feature>appSecurity-2.0</feature>
+    <feature>appSecurity-3.0</feature>
     <feature>restConnector-2.0</feature>
     <feature>jdbc-4.2</feature>
 </featureManager>
@@ -455,6 +455,62 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
     <properties.oracle URL="jdbc:oracle:thin:@//localhost:1521/myDB"/>
 </dataSource>
 ----
+
+=== Derby (in-memory DB)
+
+[source,xml]
+----
+<dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
+    <jdbcDriver libraryRef="driver-library"/>
+    <properties.derby.embedded databaseName="memory:myDB" createDatabase="create"/>
+</dataSource>
+----
+
+== Security
+
+To enable security for your application, enable the `appSecurity-3.0` feature. This will cause all application endpoints requiring a role to go through HTTPS and some form of authentication.
+
+=== Basic authentication
+
+A simple form of authentication is the `<basicRegistry>` element, which allows you to directly configure user/password pairs.
+
+[source,xml]
+----
+<featureManager>
+    <feature>appSecurity-3.0</feature>
+</featureManager>
+
+<basicRegistry id="basic">
+    <user name="bob" password="bobpwd"/>
+</basicRegistry>
+
+<webApplication location="myApp.war">
+    <application-bnd>
+        <!-- this can also be defined in web.xml instead -->
+        <security-role name="admin">
+            <user name="bob"/>
+        </security-role>
+    </application-bnd>
+</webApplication>
+----
+
+Then, managed resources (JAX-RS endpoints, servlets, etc) can be secured with `@RolesAllowed`:
+
+[source,java]
+----
+@Path("/")
+@ApplicationScoped
+@RolesAllowed("admin")
+public class HelloEndpoint {
+
+    @GET
+    public String sayHello() {
+        return "Hello World";
+    }
+}
+----
+
+Accessing any endpoints in the `HelloEndpoint` (on `http` or `https`) will then then restrict access to a user in the `admin` role (in this case `bob`). 
 
 == Included OSS Components
 
