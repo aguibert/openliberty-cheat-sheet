@@ -20,6 +20,18 @@ https://openliberty.io/[OpenLiberty] is a lightweight open framework for buildin
 - Microprofile 1.X, 2.X, and 3.X
 - Spring Boot 1.5 and 2.0
 
+== TL;DR info
+
+- Get OpenLiberty using Maven/Gradle/Docker here: https://openliberty.io/downloads/
+- Create server: `<liberty-root>/bin/server create myServer`
+- Start server: `<liberty-root>/bin/server start myServer`
+- Main config file: `<liberty-root>/usr/servers/myServer/server.xml`
+- Default app folder: `<liberty-root>/usr/servers/myServer/dropins/` 
+- Default ports: http=8080, https=9443
+- Enable only the features you need for smaller disk/memory footprint and faster start time
+- Develop apps using "dev mode" using the Liberty Maven Plugin `mvn liberty:dev` goal
+- Lots of useful guides here: https://openliberty.io/guides/
+
 == Getting Started
 
 Generate a basic Liberty project using Maven:
@@ -262,9 +274,9 @@ FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
 ADD target/myApp.war /config/dropins
 
-# Running configure.sh takes ~20s at docker build time but will greatly
-# reduce container start time. You may not want to run this for local
-# development if you are constant changing the app layer
+# Running configure.sh takes ~20s at docker build time but will greatly reduce
+# container start time. You may not want to run this for local development if
+# you are constantly changing the app layer, but should used for production
 RUN configure.sh
 ```
 
@@ -415,8 +427,17 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 | `jaxws-2.3` | Apache CXF 3.2
 | `jpa-2.1` | EclipseLink 2.6 
 | `jpa-2.2` | EclipseLink 2.7
+| `jsf-2.2` | Apache MyFaces 2.2
+| `jsf-2.3` | Apache MyFaces 2.3
 | `jsonb-1.0` | Eclipse Yasson 1.0
 | `jsonp-1.0` | Glassfish ref impl
 | `jsonp-1.1` | Glassfish ref impl
 | `mpReactiveMessaging-1.0` | SmallRye Reactive Messaging
 |===
+
+== Replaceable components
+
+- JPA implementation can be changed (typically to Hibernate) using the `jpaContainer-2.1` or `2.2` features
+- JSF implementation can be changed (typically to Mojarra) using the `jsfContainer-2.2` or `2.3` features
+- JSON-B implementation can be changed using the `jsonbContainer-1.0` feature
+- JSON-P implementation can be changed using the `jsonpContainer-1.0` or `1.1` feature

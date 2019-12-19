@@ -443,6 +443,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#_what_is_open_liberty">What is Open Liberty?</a></li>
+<li><a href="#_tldr_info">TL;DR info</a></li>
 <li><a href="#_getting_started">Getting Started</a></li>
 <li><a href="#_configuration">Configuration</a>
 <ul class="sectlevel2">
@@ -473,6 +474,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </ul>
 </li>
 <li><a href="#_included_open_source_components">Included Open Source Components</a></li>
+<li><a href="#_replaceable_components">Replaceable components</a></li>
 </ul>
 </div>
 </div>
@@ -493,6 +495,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li>
 <p>Spring Boot 1.5 and 2.0</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_tldr_info">TL;DR info</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Get OpenLiberty using Maven/Gradle/Docker here: <a href="https://openliberty.io/downloads/" class="bare">https://openliberty.io/downloads/</a></p>
+</li>
+<li>
+<p>Create server: <code>&lt;liberty-root&gt;/bin/server create myServer</code></p>
+</li>
+<li>
+<p>Start server: <code>&lt;liberty-root&gt;/bin/server start myServer</code></p>
+</li>
+<li>
+<p>Main config file: <code>&lt;liberty-root&gt;/usr/servers/myServer/server.xml</code></p>
+</li>
+<li>
+<p>Default app folder: <code>&lt;liberty-root&gt;/usr/servers/myServer/dropins/</code></p>
+</li>
+<li>
+<p>Default ports: http=8080, https=9443</p>
+</li>
+<li>
+<p>Enable only the features you need for smaller disk/memory footprint and faster start time</p>
+</li>
+<li>
+<p>Develop apps using "dev mode" using the Liberty Maven Plugin <code>mvn liberty:dev</code> goal</p>
+</li>
+<li>
+<p>Lots of useful guides here: <a href="https://openliberty.io/guides/" class="bare">https://openliberty.io/guides/</a></p>
 </li>
 </ul>
 </div>
@@ -934,9 +972,9 @@ dependencies {
 COPY src/main/liberty/config /config/
 ADD target/myApp.war /config/dropins
 
-# Running configure.sh takes ~20s at docker build time but will greatly
-# reduce container start time. You may not want to run this for local
-# development if you are constant changing the app layer
+# Running configure.sh takes ~20s at docker build time but will greatly reduce
+# container start time. You may not want to run this for local development if
+# you are constantly changing the app layer, but should used for production
 RUN configure.sh</code></pre>
 </div>
 </div>
@@ -1166,6 +1204,14 @@ RUN configure.sh</code></pre>
 <td class="tableblock halign-left valign-top"><p class="tableblock">EclipseLink 2.7</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jsf-2.2</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache MyFaces 2.2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>jsf-2.3</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Apache MyFaces 2.3</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>jsonb-1.0</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Eclipse Yasson 1.0</p></td>
 </tr>
@@ -1185,10 +1231,31 @@ RUN configure.sh</code></pre>
 </table>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_replaceable_components">Replaceable components</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>JPA implementation can be changed (typically to Hibernate) using the <code>jpaContainer-2.1</code> or <code>2.2</code> features</p>
+</li>
+<li>
+<p>JSF implementation can be changed (typically to Mojarra) using the <code>jsfContainer-2.2</code> or <code>2.3</code> features</p>
+</li>
+<li>
+<p>JSON-B implementation can be changed using the <code>jsonbContainer-1.0</code> feature</p>
+</li>
+<li>
+<p>JSON-P implementation can be changed using the <code>jsonpContainer-1.0</code> or <code>1.1</code> feature</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-18 17:41:23 -0600
+Last updated 2019-12-18 18:17:55 -0600
 </div>
 </div>
 </body>
