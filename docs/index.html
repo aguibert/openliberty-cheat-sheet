@@ -471,11 +471,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_supported_java_se_versions">9. Supported Java SE versions</a></li>
 <li><a href="#_databases">10. Databases</a>
 <ul class="sectlevel2">
-<li><a href="#_postgresql">10.1. PostgreSQL</a></li>
-<li><a href="#_ibm_db2">10.2. IBM DB2</a></li>
-<li><a href="#_microsoft_sql_server">10.3. Microsoft SQL Server</a></li>
-<li><a href="#_mysql">10.4. MySQL</a></li>
-<li><a href="#_oracle">10.5. Oracle</a></li>
+<li><a href="#_validating_connections">10.1. Validating Connections</a></li>
+<li><a href="#_postgresql">10.2. PostgreSQL</a></li>
+<li><a href="#_ibm_db2">10.3. IBM DB2</a></li>
+<li><a href="#_microsoft_sql_server">10.4. Microsoft SQL Server</a></li>
+<li><a href="#_mysql">10.5. MySQL</a></li>
+<li><a href="#_oracle">10.6. Oracle</a></li>
 </ul>
 </li>
 <li><a href="#_included_oss_components">11. Included OSS Components</a></li>
@@ -1023,7 +1024,38 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_postgresql">10.1. PostgreSQL</h3>
+<h3 id="_validating_connections">10.1. Validating Connections</h3>
+<div class="paragraph">
+<p>OpenLiberty has a REST API to test database connections. To use it, add this config:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;appSecurity-2.0&lt;/feature&gt;
+    &lt;feature&gt;restConnector-2.0&lt;/feature&gt;
+    &lt;feature&gt;jdbc-4.2&lt;/feature&gt;
+&lt;/featureManager&gt;
+
+&lt;!-- Any security mechanism can be used, &lt;quickStartSecurity&gt; is the simplest --&gt;
+&lt;quickStartSecurity userName="admin" userPassword="admin"/&gt;
+
+&lt;dataSource id="DefaultDataSource"&gt;
+    &lt;!-- the rest of your datasource config... --&gt;
+&lt;/dataSource&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To validate a connection, go to the URL: <code><a href="https://{hostname}:{httpsPort}/ibm/api/validation/dataSource/{dataSource-id}" class="bare">https://{hostname}:{httpsPort}/ibm/api/validation/dataSource/{dataSource-id}</a></code></p>
+</div>
+<div class="paragraph">
+<p>In the above example, that would be: <a href="https://localhost:9443/ibm/api/validation/dataSource/DefaultDataSource" class="bare">https://localhost:9443/ibm/api/validation/dataSource/DefaultDataSource</a></p>
+</div>
+<div class="paragraph">
+<p>For a complete walkthrough, see this blog post: <a href="https://openliberty.io/blog/2019/09/13/testing-database-connections-REST-APIs.html">Testing database connections with REST</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_postgresql">10.2. PostgreSQL</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1051,7 +1083,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ibm_db2">10.2. IBM DB2</h3>
+<h3 id="_ibm_db2">10.3. IBM DB2</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1082,7 +1114,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_microsoft_sql_server">10.3. Microsoft SQL Server</h3>
+<h3 id="_microsoft_sql_server">10.4. Microsoft SQL Server</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1110,7 +1142,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mysql">10.4. MySQL</h3>
+<h3 id="_mysql">10.5. MySQL</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1138,7 +1170,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_oracle">10.5. Oracle</h3>
+<h3 id="_oracle">10.6. Oracle</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1280,7 +1312,7 @@ RUN configure.sh</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-19 11:43:14 -0600
+Last updated 2019-12-19 12:08:41 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

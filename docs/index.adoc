@@ -313,6 +313,32 @@ This is the most common base configuration for using a JDBC DataSource (or JPA) 
 </library>
 ----
 
+=== Validating Connections
+
+OpenLiberty has a REST API to test database connections. To use it, add this config:
+
+[source,xml]
+----
+<featureManager>
+    <feature>appSecurity-2.0</feature>
+    <feature>restConnector-2.0</feature>
+    <feature>jdbc-4.2</feature>
+</featureManager>
+
+<!-- Any security mechanism can be used, <quickStartSecurity> is the simplest -->
+<quickStartSecurity userName="admin" userPassword="admin"/>
+
+<dataSource id="DefaultDataSource">
+    <!-- the rest of your datasource config... -->
+</dataSource>
+----
+
+To validate a connection, go to the URL: `https://{hostname}:{httpsPort}/ibm/api/validation/dataSource/{dataSource-id}`
+
+In the above example, that would be: https://localhost:9443/ibm/api/validation/dataSource/DefaultDataSource
+
+For a complete walkthrough, see this blog post: https://openliberty.io/blog/2019/09/13/testing-database-connections-REST-APIs.html[Testing database connections with REST]
+
 === PostgreSQL
 
 [source,xml]
