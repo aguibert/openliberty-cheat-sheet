@@ -6,6 +6,6 @@ To contribute or build it locally:
 
 ```
 $ brew install asciidoctor
-$ asciidoctor -a toc=left docs/index.adoc
+$ ./build.sh
 $ open docs/index.html
 ```
