@@ -544,7 +544,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>mvn archetype:generate \
+<pre class="highlightjs highlight"><code class="language-none hljs">mvn archetype:generate \
     -DarchetypeGroupId=io.openliberty.tools \
     -DarchetypeArtifactId=liberty-archetype-webapp \
     -DarchetypeVersion=3.1 \
@@ -558,7 +558,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">@WebServlet(urlPatterns="/servlet")
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@WebServlet(urlPatterns="/servlet")
 public class HelloServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
@@ -577,7 +577,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>mvn liberty:dev</code></pre>
+<pre class="highlightjs highlight"><code class="language-none hljs">mvn liberty:dev</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -596,7 +596,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;server&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;server&gt;
     &lt;featureManager&gt;
         &lt;feature&gt;servlet-4.0&lt;/feature&gt;
     &lt;/featureManager&gt;
@@ -645,7 +645,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;variable name="variableName" value="some.value" /&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;variable name="variableName" value="some.value" /&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -653,7 +653,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;variable name="DB_SERVER" defaultValue="localhost"/&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;variable name="DB_SERVER" defaultValue="localhost"/&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -698,7 +698,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>my-app.db.username=dbUser
+<pre class="highlightjs highlight"><code class="language-none hljs">my-app.db.username=dbUser
 my-app.db.password=dbPass</code></pre>
 </div>
 </div>
@@ -707,7 +707,7 @@ my-app.db.password=dbPass</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-yaml" data-lang="yaml">kind: Deployment
+<pre class="highlightjs highlight"><code data-lang="yaml" class="language-yaml hljs">kind: Deployment
 apiVersion: apps/v1beta1
 metadata:
   name: my-app
@@ -732,7 +732,7 @@ spec:
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">  &lt;dataSource ...&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">  &lt;dataSource ...&gt;
     &lt;properties ...
         user="${my-app.db.username}"
         password="${my-app.db.password}"/&gt;
@@ -863,7 +863,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;plugin&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;plugin&gt;
     &lt;groupId&gt;io.openliberty.tools&lt;/groupId&gt;
     &lt;artifactId&gt;liberty-maven-plugin&lt;/artifactId&gt;
     &lt;version&gt;3.1&lt;/version&gt;
@@ -912,7 +912,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-groovy" data-lang="groovy">buildscript {
+<pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">buildscript {
     repositories {
         mavenCentral()
     }
@@ -968,7 +968,7 @@ dependencies {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>FROM openliberty/open-liberty:full-java8-openj9-ubi
+<pre class="highlightjs highlight"><code class="language-none hljs">FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
 ADD target/myApp.war /config/dropins
 
@@ -999,7 +999,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;featureManager&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
     &lt;feature&gt;jdbc-4.2&lt;/feature&gt;
 &lt;/featureManager&gt;
 
@@ -1012,7 +1012,7 @@ RUN configure.sh</code></pre>
 <h3 id="_postgresql">PostgreSQL</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
     &lt;properties.postgresql serverName="localhost" portNumber="5432"
                 databaseName="myDB"
@@ -1027,7 +1027,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
+<pre class="highlightjs highlight"><code class="language-none hljs">docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
            --name postgres-liberty \
            -e POSTGRES_USER=exampleUser \
            -e POSTGRES_PASSWORD=examplePassword \
@@ -1040,7 +1040,7 @@ RUN configure.sh</code></pre>
 <h3 id="_ibm_db2">IBM DB2</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
     &lt;properties.db2.jcc serverName="localhost" portNumber="50000"
                 databaseName="myDB"
@@ -1055,7 +1055,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
+<pre class="highlightjs highlight"><code class="language-none hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name db2-liberty \
            -e AUTOCONFIG=false -e ARCHIVE_LOGS=false -e LICENSE=accept \
            -e DBNAME=myDB \
@@ -1071,7 +1071,7 @@ RUN configure.sh</code></pre>
 <h3 id="_microsoft_sql_server">Microsoft SQL Server</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
     &lt;properties.microsoft.sqlserver serverName="localhost" portNumber="1433"
                 databaseName="myDB"
@@ -1086,7 +1086,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
+<pre class="highlightjs highlight"><code class="language-none hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mssql-liberty \
            -e ACCEPT_EULA=Y \
            -e SA_PASSWORD=examplePass0ord \
@@ -1099,7 +1099,7 @@ RUN configure.sh</code></pre>
 <h3 id="_mysql">MySQL</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
     &lt;properties serverName="localhost" portNumber="3306"
                 databaseName="myDb"
@@ -1113,7 +1113,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code>docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
+<pre class="highlightjs highlight"><code class="language-none hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mysql-liberty \
            -e MYSQL_DATABASE=myDB \
            -e MYSQL_USER=exampleUser \
@@ -1127,7 +1127,7 @@ RUN configure.sh</code></pre>
 <h3 id="_oracle">Oracle</h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
     &lt;properties.oracle URL="jdbc:oracle:thin:@//localhost:1521/myDB"/&gt;
 &lt;/dataSource&gt;</code></pre>
@@ -1255,8 +1255,11 @@ RUN configure.sh</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-18 18:30:36 -0600
+Last updated 2019-12-18 18:37:37 -0600
 </div>
 </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js"></script>
+<script>hljs.initHighlighting()</script>
 </body>
 </html>

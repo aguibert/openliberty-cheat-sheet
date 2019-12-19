@@ -11,6 +11,7 @@
 = Open Liberty Cheat Sheet
 
 :toc: left
+:source-highlighter: highlightjs
 
 == What is Open Liberty?
 
@@ -247,7 +248,7 @@ Also see:
 
 Add the following snippet to your build.gradle file:
 
-[source,groovy]
+[source,javascript]
 ----
 buildscript {
     repositories {
