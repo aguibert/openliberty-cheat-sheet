@@ -205,8 +205,8 @@ Some of the most common Liberty features are:
 
 WARNING: You cannot mix Java EE 7 and 8 features in the same server.xml!
 
-=== MicroProfile 3.3
-- `microProfile-3.3`: Enables all features in MicroProfile 3.3 platform
+=== MicroProfile 3.2
+- `microProfile-3.2`: Enables all features in MicroProfile 3.2 platform
 - `cdi-2.0`
 - `jaxrs-2.1`
 - `jsonb-1.0`
