@@ -483,6 +483,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_security">11. Security</a>
 <ul class="sectlevel2">
 <li><a href="#_basic_authentication">11.1. Basic authentication</a></li>
+<li><a href="#_microprofile_jwt">11.2. MicroProfile JWT</a></li>
 </ul>
 </li>
 <li><a href="#_included_oss_components">12. Included OSS Components</a></li>
@@ -616,6 +617,7 @@ public class HelloController {
 <p>The primary source of configuration for a Liberty server is the <code>server.xml</code> file. In most projects it is located at <code>src/main/liberty/config/server.xml</code> and might look like this:</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;server&gt;
     &lt;featureManager&gt;
@@ -640,31 +642,32 @@ public class HelloController {
 <div class="sect2">
 <h3 id="_variable_substitution">4.2. Variable Substitution</h3>
 <div class="paragraph">
-<p>Server configuration can be parameterized using variables. When resolving variable names the following sources are consulted in increasing order of precedence:</p>
+<p>Server configuration can be parameterized using variables. When resolving variable names the following sources are consulted in decreasing order of precedence:</p>
 </div>
-<div class="ulist">
-<ul>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p>server.xml default variable values</p>
-</li>
-<li>
-<p>environment variables</p>
-</li>
-<li>
-<p>bootstrap.properties</p>
+<p>The value in the <code>&lt;variable value="&#8230;&#8203;"/&gt;</code> attribute</p>
 </li>
 <li>
 <p>Java system properties (i.e. jvm.options)</p>
 </li>
 <li>
-<p>server.xml config</p>
+<p>bootstrap.properties</p>
 </li>
-</ul>
+<li>
+<p>environment variables</p>
+</li>
+<li>
+<p>The value in the <code>&lt;variable defaultValue="&#8230;&#8203;"/&gt;</code> attribute</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
 <p>Variables are referenced using <code>${variableName}</code> syntax. In server config, specify variables using the variable element:</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;variable name="variableName" value="some.value" /&gt;</code></pre>
 </div>
@@ -673,6 +676,7 @@ public class HelloController {
 <p>Default values, specified in server config, are only used if no other value can be found. They are specified using the variable element and the <code>defaultValue</code> attribute:</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;variable name="DB_SERVER" defaultValue="localhost"/&gt;</code></pre>
 </div>
@@ -752,12 +756,13 @@ spec:
 <p>Finally, the secrets can then be referenced in server configuration using variables:</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">  &lt;dataSource ...&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource ...&gt;
     &lt;properties ...
         user="${my-app.db.username}"
         password="${my-app.db.password}"/&gt;
-  &lt;/dataSource&gt;</code></pre>
+&lt;/dataSource&gt;</code></pre>
 </div>
 </div>
 </div>
@@ -883,6 +888,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 <p>Add the maven plugin to your pom.xml file:</p>
 </div>
 <div class="listingblock">
+<div class="title">pom.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;plugin&gt;
     &lt;groupId&gt;io.openliberty.tools&lt;/groupId&gt;
@@ -932,6 +938,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 <p>Add the following snippet to your build.gradle file:</p>
 </div>
 <div class="listingblock">
+<div class="title">build.gradle</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="javascript" class="language-javascript hljs">buildscript {
     repositories {
@@ -988,6 +995,7 @@ dependencies {
 <p>The basic Liberty Dockerfile looks like this:</p>
 </div>
 <div class="listingblock">
+<div class="title">Dockerfile</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="dockerfile" class="language-dockerfile hljs">FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
@@ -1019,6 +1027,7 @@ RUN configure.sh</code></pre>
 <p>This is the most common base configuration for using a JDBC DataSource (or JPA) with Liberty:</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
     &lt;feature&gt;jdbc-4.2&lt;/feature&gt;
@@ -1035,6 +1044,7 @@ RUN configure.sh</code></pre>
 <p>OpenLiberty has a REST API to test database connections. To use it, add this config:</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
     &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
@@ -1063,6 +1073,7 @@ RUN configure.sh</code></pre>
 <div class="sect2">
 <h3 id="_postgresql">10.2. PostgreSQL</h3>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
@@ -1091,6 +1102,7 @@ RUN configure.sh</code></pre>
 <div class="sect2">
 <h3 id="_ibm_db2">10.3. IBM DB2</h3>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
@@ -1122,6 +1134,7 @@ RUN configure.sh</code></pre>
 <div class="sect2">
 <h3 id="_microsoft_sql_server">10.4. Microsoft SQL Server</h3>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
@@ -1150,6 +1163,7 @@ RUN configure.sh</code></pre>
 <div class="sect2">
 <h3 id="_mysql">10.5. MySQL</h3>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
@@ -1178,6 +1192,7 @@ RUN configure.sh</code></pre>
 <div class="sect2">
 <h3 id="_oracle">10.6. Oracle</h3>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
     &lt;jdbcDriver libraryRef="driver-library"/&gt;
@@ -1211,6 +1226,7 @@ RUN configure.sh</code></pre>
 <p>A simple form of authentication is the <code>&lt;basicRegistry&gt;</code> element, which allows you to directly configure user/password pairs.</p>
 </div>
 <div class="listingblock">
+<div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
     &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
@@ -1249,6 +1265,50 @@ public class HelloEndpoint {
 </div>
 <div class="paragraph">
 <p>Accessing any endpoints in the <code>HelloEndpoint</code> (on <code>http</code> or <code>https</code>) will then then restrict access to a user in the <code>admin</code> role (in this case <code>bob</code>).</p>
+</div>
+<div class="paragraph">
+<p>For more details see this guide: <a href="https://openliberty.io/guides/security-intro.html">Security a web application</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_microprofile_jwt">11.2. MicroProfile JWT</h3>
+<div class="paragraph">
+<p>Enable one of the <code>mpJwt</code> features:</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
+    &lt;feature&gt;mpJwt-1.1&lt;/feature&gt;
+&lt;/featureManager&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, configure the JWT issuer and public key with MicroProfile config:</p>
+</div>
+<div class="listingblock">
+<div class="title">microprofile-config.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># If you set/override these values using environment variables,
+# convert all '.' chars to '_' chars in property key names
+mp.jwt.verify.publickey=&lt;the JWT issuer's public key&gt;
+mp.jwt.verify.issuer=http://someJwtIssuer.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lastly, resources can be secured using the <code>@RolesAllowed</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/")
+@RequestScoped
+@RolesAllowed("users") // Requires jwts to have "group=users" claim
+public class SecuredServiceEndpoint {</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more details see this guide: <a href="https://openliberty.io/guides/microprofile-jwt.html">Securing microservices with JWTs</a></p>
 </div>
 </div>
 </div>
@@ -1383,7 +1443,7 @@ public class HelloEndpoint {
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-19 15:57:44 -0600
+Last updated 2019-12-19 16:29:37 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

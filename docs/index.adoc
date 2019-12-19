@@ -79,6 +79,7 @@ A more detailed Getting Started walkthrough can be found in the https://openlibe
 
 The primary source of configuration for a Liberty server is the `server.xml` file. In most projects it is located at `src/main/liberty/config/server.xml` and might look like this:
 
+.server.xml
 [source,xml]
 ----
 <server>
@@ -100,16 +101,17 @@ All configuration in `server.xml` is dynamic by default, meaning that if you mod
 
 === Variable Substitution
 
-Server configuration can be parameterized using variables. When resolving variable names the following sources are consulted in increasing order of precedence:
+Server configuration can be parameterized using variables. When resolving variable names the following sources are consulted in decreasing order of precedence:
 
-- server.xml default variable values
-- environment variables
-- bootstrap.properties
-- Java system properties (i.e. jvm.options)
-- server.xml config
+1. The value in the `<variable value="..."/>` attribute
+2. Java system properties (i.e. jvm.options)
+3. bootstrap.properties
+4. environment variables
+5. The value in the `<variable defaultValue="..."/>` attribute
 
 Variables are referenced using `${variableName}` syntax. In server config, specify variables using the variable element:
 
+.server.xml
 [source,xml]
 ----
 <variable name="variableName" value="some.value" />
@@ -117,6 +119,7 @@ Variables are referenced using `${variableName}` syntax. In server config, speci
 
 Default values, specified in server config, are only used if no other value can be found. They are specified using the variable element and the `defaultValue` attribute:
 
+.server.xml
 [source,xml]
 ----
 <variable name="DB_SERVER" defaultValue="localhost"/>
@@ -172,13 +175,14 @@ spec:
 
 Finally, the secrets can then be referenced in server configuration using variables:
 
+.server.xml
 [source,xml]
 ----
-  <dataSource ...>
+<dataSource ...>
     <properties ...
         user="${my-app.db.username}"
         password="${my-app.db.password}"/>
-  </dataSource>
+</dataSource>
 ----
 
 == Features
@@ -221,6 +225,7 @@ A complete list of all Liberty features can be found here: https://openliberty.i
 
 Add the maven plugin to your pom.xml file:
 
+.pom.xml
 [source,xml]
 ----
 <plugin>
@@ -246,6 +251,7 @@ Also see:
 
 Add the following snippet to your build.gradle file:
 
+.build.gradle
 [source,javascript]
 ----
 buildscript {
@@ -280,6 +286,7 @@ Also see:
 
 The basic Liberty Dockerfile looks like this:
 
+.Dockerfile
 [source,dockerfile]
 ----
 FROM openliberty/open-liberty:full-java8-openj9-ubi
@@ -302,6 +309,7 @@ OpenLiberty is currently supported on Java SE 8, 11, and 13. Official documentat
 
 This is the most common base configuration for using a JDBC DataSource (or JPA) with Liberty:
 
+.server.xml
 [source,xml]
 ----
 <featureManager>
@@ -317,6 +325,7 @@ This is the most common base configuration for using a JDBC DataSource (or JPA) 
 
 OpenLiberty has a REST API to test database connections. To use it, add this config:
 
+.server.xml
 [source,xml]
 ----
 <featureManager>
@@ -341,6 +350,7 @@ For a complete walkthrough, see this blog post: https://openliberty.io/blog/2019
 
 === PostgreSQL
 
+.server.xml
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
@@ -367,6 +377,7 @@ docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
 
 === IBM DB2
 
+.server.xml
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
@@ -396,6 +407,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 === Microsoft SQL Server
 
+.server.xml
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
@@ -422,6 +434,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 === MySQL
 
+.server.xml
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
@@ -448,6 +461,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 === Oracle
 
+.server.xml
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
@@ -474,6 +488,7 @@ To enable security for your application, enable the `appSecurity-3.0` feature. T
 
 A simple form of authentication is the `<basicRegistry>` element, which allows you to directly configure user/password pairs.
 
+.server.xml
 [source,xml]
 ----
 <featureManager>
@@ -511,6 +526,44 @@ public class HelloEndpoint {
 ----
 
 Accessing any endpoints in the `HelloEndpoint` (on `http` or `https`) will then then restrict access to a user in the `admin` role (in this case `bob`). 
+
+For more details see this guide: https://openliberty.io/guides/security-intro.html[Security a web application]
+
+=== MicroProfile JWT
+
+Enable one of the `mpJwt` features:
+
+.server.xml
+[source,xml]
+----
+<featureManager>
+    <feature>appSecurity-3.0</feature>
+    <feature>mpJwt-1.1</feature>
+</featureManager>
+----
+
+Then, configure the JWT issuer and public key with MicroProfile config:
+
+.microprofile-config.properties
+[source,properties]
+----
+# If you set/override these values using environment variables, 
+# convert all '.' chars to '_' chars in property key names
+mp.jwt.verify.publickey=<the JWT issuer's public key>
+mp.jwt.verify.issuer=http://someJwtIssuer.com
+----
+
+Lastly, resources can be secured using the `@RolesAllowed` annotation:
+
+[source,java]
+----
+@Path("/")
+@RequestScoped
+@RolesAllowed("users") // Requires jwts to have "group=users" claim
+public class SecuredServiceEndpoint {
+----
+
+For more details see this guide: https://openliberty.io/guides/microprofile-jwt.html[Securing microservices with JWTs]
 
 == Included OSS Components
 
