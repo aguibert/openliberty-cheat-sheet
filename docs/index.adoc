@@ -30,40 +30,32 @@ https://openliberty.io/[OpenLiberty] is a lightweight open framework for buildin
 - Start server: `<liberty-root>/bin/server start myServer`
 - Main config file: `<liberty-root>/usr/servers/myServer/server.xml`
 - Default app folder: `<liberty-root>/usr/servers/myServer/dropins/` 
-- Default ports: http=8080, https=9443
+- Default ports: http=9080, https=9443
 - Enable only the features you need for smaller disk/memory footprint and faster start time
 - Develop apps using "dev mode" using the Liberty Maven Plugin `mvn liberty:dev` goal
 - Lots of useful guides here: https://openliberty.io/guides/
 
 == Getting Started
 
-Generate a basic Liberty project using Maven:
+Generate a basic Liberty project using the https://start.microprofile.io/[MicroProfile Starter] website:
 
-[source,shell]
-----
-mvn archetype:generate \
-    -DarchetypeGroupId=io.openliberty.tools \
-    -DarchetypeArtifactId=liberty-archetype-webapp \
-    -DarchetypeVersion=3.1 \
-    -DgroupId=org.example \
-    -DartifactId=liberty-app \
-    -Dversion=1.0-SNAPSHOT
-----
+1. Select "MicroProfile 3.0" for MicroProfile version
+2. Select "OpenLiberty" for MicroProfile Runtime
+3. Select any example specifications you want to be included
+4. Download and extract the project, then import into your preferred IDE
 
-This creates a Maven project with a simple Servlet class in it:
+
+This creates a Maven project with a simple JAX-RS resource class in it:
 
 [source,java]
 ----
-@WebServlet(urlPatterns="/servlet")
-public class HelloServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+@Path("/hello")
+@Singleton
+public class HelloController {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().append("Hello! How are you today?");
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    @GET
+    public String sayHello() {
+        return "Hello World";
     }
 }
 ----
@@ -75,7 +67,11 @@ You can start the application in "dev mode" using the command:
 mvn liberty:dev
 ----
 
-Then open a web browser to http://localhost:9080/test/servlet to access the Servlet. To run unit and integration tests, press the `Enter` key. To exit dev mode press `Ctrl+C`.
+Then open a web browser to http://localhost:8181/data/hello to access the JAX-RS endpoint. You will see the text `Hello World`.
+
+If you make code changes the application will automatically be updated.
+
+If you add tests to the project, you can run them from dev mode by pressing the `Enter` key. To exit dev mode press `Ctrl+C`.
 
 A more detailed Getting Started walkthrough can be found in the https://openliberty.io/guides/maven-intro.html[OpenLiberty Maven guide].
 

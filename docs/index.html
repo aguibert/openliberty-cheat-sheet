@@ -527,7 +527,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Default app folder: <code>&lt;liberty-root&gt;/usr/servers/myServer/dropins/</code></p>
 </li>
 <li>
-<p>Default ports: http=8080, https=9443</p>
+<p>Default ports: http=9080, https=9443</p>
 </li>
 <li>
 <p>Enable only the features you need for smaller disk/memory footprint and faster start time</p>
@@ -546,34 +546,36 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h2 id="_getting_started">3. Getting Started</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Generate a basic Liberty project using Maven:</p>
+<p>Generate a basic Liberty project using the <a href="https://start.microprofile.io/">MicroProfile Starter</a> website:</p>
 </div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">mvn archetype:generate \
-    -DarchetypeGroupId=io.openliberty.tools \
-    -DarchetypeArtifactId=liberty-archetype-webapp \
-    -DarchetypeVersion=3.1 \
-    -DgroupId=org.example \
-    -DartifactId=liberty-app \
-    -Dversion=1.0-SNAPSHOT</code></pre>
-</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Select "MicroProfile 3.0" for MicroProfile version</p>
+</li>
+<li>
+<p>Select "OpenLiberty" for MicroProfile Runtime</p>
+</li>
+<li>
+<p>Select any example specifications you want to be included</p>
+</li>
+<li>
+<p>Download and extract the project, then import into your preferred IDE</p>
+</li>
+</ol>
 </div>
 <div class="paragraph">
-<p>This creates a Maven project with a simple Servlet class in it:</p>
+<p>This creates a Maven project with a simple JAX-RS resource class in it:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@WebServlet(urlPatterns="/servlet")
-public class HelloServlet extends HttpServlet {
-    private static final long serialVersionUID = 1L;
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/hello")
+@Singleton
+public class HelloController {
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.getWriter().append("Hello! How are you today?");
-    }
-
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
+    @GET
+    public String sayHello() {
+        return "Hello World";
     }
 }</code></pre>
 </div>
@@ -587,7 +589,13 @@ public class HelloServlet extends HttpServlet {
 </div>
 </div>
 <div class="paragraph">
-<p>Then open a web browser to <a href="http://localhost:9080/test/servlet" class="bare">http://localhost:9080/test/servlet</a> to access the Servlet. To run unit and integration tests, press the <code>Enter</code> key. To exit dev mode press <code>Ctrl+C</code>.</p>
+<p>Then open a web browser to <a href="http://localhost:8181/data/hello" class="bare">http://localhost:8181/data/hello</a> to access the JAX-RS endpoint. You will see the text <code>Hello World</code>.</p>
+</div>
+<div class="paragraph">
+<p>If you make code changes the application will automatically be updated.</p>
+</div>
+<div class="paragraph">
+<p>If you add tests to the project, you can run them from dev mode by pressing the <code>Enter</code> key. To exit dev mode press <code>Ctrl+C</code>.</p>
 </div>
 <div class="paragraph">
 <p>A more detailed Getting Started walkthrough can be found in the <a href="https://openliberty.io/guides/maven-intro.html">OpenLiberty Maven guide</a>.</p>
@@ -1272,7 +1280,7 @@ RUN configure.sh</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-19 10:31:05 -0600
+Last updated 2019-12-19 11:25:52 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
