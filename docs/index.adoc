@@ -37,7 +37,7 @@ https://openliberty.io/[OpenLiberty] is a lightweight open framework for buildin
 
 Generate a basic Liberty project using Maven:
 
-[source]
+[source,shell]
 ----
 mvn archetype:generate \
     -DarchetypeGroupId=io.openliberty.tools \
@@ -68,7 +68,7 @@ public class HelloServlet extends HttpServlet {
 
 You can start the application in "dev mode" using the command:
 
-[source]
+[source,shell]
 ----
 mvn liberty:dev
 ----
@@ -142,7 +142,7 @@ If you are running your application in Kubernetes, you don't want to have creden
 
 First, configure a Kubernetes secret, for example `database-credentials` with the contents:
 
-[source]
+[source,properties]
 ----
 my-app.db.username=dbUser
 my-app.db.password=dbPass
@@ -282,7 +282,7 @@ Also see:
 
 The basic Liberty Dockerfile looks like this:
 
-[source]
+[source,dockerfile]
 ----
 FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
@@ -331,7 +331,7 @@ This is the most common base configuration for using a JDBC DataSource (or JPA) 
 
 To run a Postgres Docker container locally:
 
-[source]
+[source,shell]
 ----
 docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
            --name postgres-liberty \
@@ -357,7 +357,7 @@ docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
 
 To run a DB2 Docker container locally:
 
-[source]
+[source,shell]
 ----
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name db2-liberty \
@@ -386,7 +386,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 To run a SQL Server Docker container locally:
 
-[source]
+[source,shell]
 ----
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mssql-liberty \
@@ -411,7 +411,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 To run a MySQL Docker container locally:
 
-[source]
+[source,shell]
 ----
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mysql-liberty \

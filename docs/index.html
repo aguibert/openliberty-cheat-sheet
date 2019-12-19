@@ -544,7 +544,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">mvn archetype:generate \
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">mvn archetype:generate \
     -DarchetypeGroupId=io.openliberty.tools \
     -DarchetypeArtifactId=liberty-archetype-webapp \
     -DarchetypeVersion=3.1 \
@@ -577,7 +577,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">mvn liberty:dev</code></pre>
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">mvn liberty:dev</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -698,7 +698,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">my-app.db.username=dbUser
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs">my-app.db.username=dbUser
 my-app.db.password=dbPass</code></pre>
 </div>
 </div>
@@ -968,7 +968,7 @@ dependencies {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">FROM openliberty/open-liberty:full-java8-openj9-ubi
+<pre class="highlightjs highlight"><code data-lang="dockerfile" class="language-dockerfile hljs">FROM openliberty/open-liberty:full-java8-openj9-ubi
 COPY src/main/liberty/config /config/
 ADD target/myApp.war /config/dropins
 
@@ -1027,7 +1027,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
            --name postgres-liberty \
            -e POSTGRES_USER=exampleUser \
            -e POSTGRES_PASSWORD=examplePassword \
@@ -1055,7 +1055,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name db2-liberty \
            -e AUTOCONFIG=false -e ARCHIVE_LOGS=false -e LICENSE=accept \
            -e DBNAME=myDB \
@@ -1086,7 +1086,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mssql-liberty \
            -e ACCEPT_EULA=Y \
            -e SA_PASSWORD=examplePass0ord \
@@ -1113,7 +1113,7 @@ RUN configure.sh</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-none hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mysql-liberty \
            -e MYSQL_DATABASE=myDB \
            -e MYSQL_USER=exampleUser \
@@ -1255,7 +1255,7 @@ RUN configure.sh</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-18 18:37:37 -0600
+Last updated 2019-12-18 18:58:15 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
