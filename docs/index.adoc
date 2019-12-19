@@ -9,9 +9,11 @@
 :page-layout: general-reference
 :page-type: general
 = Open Liberty Cheat Sheet
+Andy Guibert <https://twitter.com/andrew_guibert[@andrew_guibert]>
 
 :toc: left
 :source-highlighter: highlightjs
+:sectnums:
 
 == What is Open Liberty?
 
@@ -432,7 +434,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 </dataSource>
 ----
 
-== Included Open Source Components
+== Included OSS Components
 
 [options="header",cols="1,1"]
 |===
@@ -459,9 +461,15 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 | `mpReactiveMessaging-1.0` | SmallRye Reactive Messaging
 |===
 
-== Replaceable components
+== Replaceable Components
 
 - JPA implementation can be changed (typically to Hibernate) using the `jpaContainer-2.1` or `2.2` features
 - JSF implementation can be changed (typically to Mojarra) using the `jsfContainer-2.2` or `2.3` features
 - JSON-B implementation can be changed using the `jsonbContainer-1.0` feature
 - JSON-P implementation can be changed using the `jsonpContainer-1.0` or `1.1` feature
+
+== Contribute Corrections
+
+Find some incorrect information or want to contribute an additional section?
+
+Fork this document on github and raise a PR: https://github.com/aguibert/openliberty-cheat-sheet[GitHub - openliberty-cheat-sheet]

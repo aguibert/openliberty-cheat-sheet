@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
+<meta name="author" content="Andy Guibert">
 <title>Open Liberty Cheat Sheet</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -439,48 +440,53 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <body class="article toc2 toc-left">
 <div id="header">
 <h1>Open Liberty Cheat Sheet</h1>
+<div class="details">
+<span id="author" class="author">Andy Guibert</span><br>
+<span id="email" class="email"><a href="https://twitter.com/andrew_guibert">@andrew_guibert</a></span><br>
+</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_what_is_open_liberty">What is Open Liberty?</a></li>
-<li><a href="#_tldr_info">TL;DR info</a></li>
-<li><a href="#_getting_started">Getting Started</a></li>
-<li><a href="#_configuration">Configuration</a>
+<li><a href="#_what_is_open_liberty">1. What is Open Liberty?</a></li>
+<li><a href="#_tldr_info">2. TL;DR info</a></li>
+<li><a href="#_getting_started">3. Getting Started</a></li>
+<li><a href="#_configuration">4. Configuration</a>
 <ul class="sectlevel2">
-<li><a href="#_dynamic_configuration">Dynamic Configuration</a></li>
-<li><a href="#_variable_substitution">Variable Substitution</a></li>
-<li><a href="#_predefined_variables">Predefined Variables</a></li>
-<li><a href="#_configuration_secrets">Configuration Secrets</a></li>
+<li><a href="#_dynamic_configuration">4.1. Dynamic Configuration</a></li>
+<li><a href="#_variable_substitution">4.2. Variable Substitution</a></li>
+<li><a href="#_predefined_variables">4.3. Predefined Variables</a></li>
+<li><a href="#_configuration_secrets">4.4. Configuration Secrets</a></li>
 </ul>
 </li>
-<li><a href="#_features">Features</a>
+<li><a href="#_features">5. Features</a>
 <ul class="sectlevel2">
-<li><a href="#_java_ee_8">Java EE 8</a></li>
-<li><a href="#_java_ee_7">Java EE 7</a></li>
-<li><a href="#_microprofile_3_3">MicroProfile 3.3</a></li>
+<li><a href="#_java_ee_8">5.1. Java EE 8</a></li>
+<li><a href="#_java_ee_7">5.2. Java EE 7</a></li>
+<li><a href="#_microprofile_3_3">5.3. MicroProfile 3.3</a></li>
 </ul>
 </li>
-<li><a href="#_maven">Maven</a></li>
-<li><a href="#_gradle">Gradle</a></li>
-<li><a href="#_docker">Docker</a></li>
-<li><a href="#_supported_java_se_versions">Supported Java SE versions</a></li>
-<li><a href="#_databases">Databases</a>
+<li><a href="#_maven">6. Maven</a></li>
+<li><a href="#_gradle">7. Gradle</a></li>
+<li><a href="#_docker">8. Docker</a></li>
+<li><a href="#_supported_java_se_versions">9. Supported Java SE versions</a></li>
+<li><a href="#_databases">10. Databases</a>
 <ul class="sectlevel2">
-<li><a href="#_postgresql">PostgreSQL</a></li>
-<li><a href="#_ibm_db2">IBM DB2</a></li>
-<li><a href="#_microsoft_sql_server">Microsoft SQL Server</a></li>
-<li><a href="#_mysql">MySQL</a></li>
-<li><a href="#_oracle">Oracle</a></li>
+<li><a href="#_postgresql">10.1. PostgreSQL</a></li>
+<li><a href="#_ibm_db2">10.2. IBM DB2</a></li>
+<li><a href="#_microsoft_sql_server">10.3. Microsoft SQL Server</a></li>
+<li><a href="#_mysql">10.4. MySQL</a></li>
+<li><a href="#_oracle">10.5. Oracle</a></li>
 </ul>
 </li>
-<li><a href="#_included_open_source_components">Included Open Source Components</a></li>
-<li><a href="#_replaceable_components">Replaceable components</a></li>
+<li><a href="#_included_oss_components">11. Included OSS Components</a></li>
+<li><a href="#_replaceable_components">12. Replaceable Components</a></li>
+<li><a href="#_contribute_corrections">13. Contribute Corrections</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_what_is_open_liberty">What is Open Liberty?</h2>
+<h2 id="_what_is_open_liberty">1. What is Open Liberty?</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://openliberty.io/">OpenLiberty</a> is a lightweight open framework for building fast and efficient cloud-native Java microservices. It supports some of the most popular Java standards today, including:</p>
@@ -501,7 +507,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_tldr_info">TL;DR info</h2>
+<h2 id="_tldr_info">2. TL;DR info</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -537,7 +543,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 </div>
 <div class="sect1">
-<h2 id="_getting_started">Getting Started</h2>
+<h2 id="_getting_started">3. Getting Started</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Generate a basic Liberty project using Maven:</p>
@@ -589,7 +595,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_configuration">Configuration</h2>
+<h2 id="_configuration">4. Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The primary source of configuration for a Liberty server is the <code>server.xml</code> file. In most projects it is located at <code>src/main/liberty/config/server.xml</code> and might look like this:</p>
@@ -611,13 +617,13 @@ public class HelloServlet extends HttpServlet {
 <p>For more info see: <a href="https://openliberty.io/docs/ref/feature/">OpenLiberty server configuration overview</a></p>
 </div>
 <div class="sect2">
-<h3 id="_dynamic_configuration">Dynamic Configuration</h3>
+<h3 id="_dynamic_configuration">4.1. Dynamic Configuration</h3>
 <div class="paragraph">
 <p>All configuration in <code>server.xml</code> is dynamic by default, meaning that if you modify it while the server is running, the server will automatically update to account for the change&#8201;&#8212;&#8201;typically in a few milliseconds.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_variable_substitution">Variable Substitution</h3>
+<h3 id="_variable_substitution">4.2. Variable Substitution</h3>
 <div class="paragraph">
 <p>Server configuration can be parameterized using variables. When resolving variable names the following sources are consulted in increasing order of precedence:</p>
 </div>
@@ -658,7 +664,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_predefined_variables">Predefined Variables</h3>
+<h3 id="_predefined_variables">4.3. Predefined Variables</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -689,7 +695,7 @@ public class HelloServlet extends HttpServlet {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_configuration_secrets">Configuration Secrets</h3>
+<h3 id="_configuration_secrets">4.4. Configuration Secrets</h3>
 <div class="paragraph">
 <p>If you are running your application in Kubernetes, you don&#8217;t want to have credentials exposed as simple environment variables, and you certainly don&#8217;t want them checked in with the rest of your application source code!</p>
 </div>
@@ -743,7 +749,7 @@ spec:
 </div>
 </div>
 <div class="sect1">
-<h2 id="_features">Features</h2>
+<h2 id="_features">5. Features</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The features enabled for a Liberty server are listed in the <code>&lt;featureManager&gt;</code> element. A Liberty feature may include other Liberty features. For example, the <code>jsp-2.3</code> feature pulls in the <code>servlet-4.0</code> feature, and the <code>webProfile-8.0</code> feature pulls in all of the features for Java EE 8 Web Profile.</p>
@@ -764,7 +770,7 @@ Only enable the features that you need! While it may be convenient to enable "co
 <p>Some of the most common Liberty features are:</p>
 </div>
 <div class="sect2">
-<h3 id="_java_ee_8">Java EE 8</h3>
+<h3 id="_java_ee_8">5.1. Java EE 8</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -795,7 +801,7 @@ Only enable the features that you need! While it may be convenient to enable "co
 </div>
 </div>
 <div class="sect2">
-<h3 id="_java_ee_7">Java EE 7</h3>
+<h3 id="_java_ee_7">5.2. Java EE 7</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -820,7 +826,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 </div>
 </div>
 <div class="sect2">
-<h3 id="_microprofile_3_3">MicroProfile 3.3</h3>
+<h3 id="_microprofile_3_3">5.3. MicroProfile 3.3</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -856,7 +862,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 </div>
 </div>
 <div class="sect1">
-<h2 id="_maven">Maven</h2>
+<h2 id="_maven">6. Maven</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Add the maven plugin to your pom.xml file:</p>
@@ -905,7 +911,7 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 </div>
 </div>
 <div class="sect1">
-<h2 id="_gradle">Gradle</h2>
+<h2 id="_gradle">7. Gradle</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Add the following snippet to your build.gradle file:</p>
@@ -961,7 +967,7 @@ dependencies {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_docker">Docker</h2>
+<h2 id="_docker">8. Docker</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The basic Liberty Dockerfile looks like this:</p>
@@ -984,7 +990,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_supported_java_se_versions">Supported Java SE versions</h2>
+<h2 id="_supported_java_se_versions">9. Supported Java SE versions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>OpenLiberty is currently supported on Java SE 8, 11, and 13. Official documentation can be found here: <a href="https://openliberty.io/docs/ref/general/#java-se.html">JavaSE support</a></p>
@@ -992,7 +998,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_databases">Databases</h2>
+<h2 id="_databases">10. Databases</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This is the most common base configuration for using a JDBC DataSource (or JPA) with Liberty:</p>
@@ -1009,7 +1015,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_postgresql">PostgreSQL</h3>
+<h3 id="_postgresql">10.1. PostgreSQL</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1037,7 +1043,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ibm_db2">IBM DB2</h3>
+<h3 id="_ibm_db2">10.2. IBM DB2</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1068,7 +1074,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_microsoft_sql_server">Microsoft SQL Server</h3>
+<h3 id="_microsoft_sql_server">10.3. Microsoft SQL Server</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1096,7 +1102,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_mysql">MySQL</h3>
+<h3 id="_mysql">10.4. MySQL</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1124,7 +1130,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_oracle">Oracle</h3>
+<h3 id="_oracle">10.5. Oracle</h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
@@ -1137,7 +1143,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_included_open_source_components">Included Open Source Components</h2>
+<h2 id="_included_oss_components">11. Included OSS Components</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1232,7 +1238,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_replaceable_components">Replaceable components</h2>
+<h2 id="_replaceable_components">12. Replaceable Components</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1252,10 +1258,21 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_contribute_corrections">13. Contribute Corrections</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Find some incorrect information or want to contribute an additional section?</p>
+</div>
+<div class="paragraph">
+<p>Fork this document on github and raise a PR: <a href="https://github.com/aguibert/openliberty-cheat-sheet">GitHub - openliberty-cheat-sheet</a></p>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-12-18 18:58:15 -0600
+Last updated 2019-12-19 10:31:05 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
