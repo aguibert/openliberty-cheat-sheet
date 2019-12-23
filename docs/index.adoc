@@ -529,9 +529,34 @@ Accessing any endpoints in the `HelloEndpoint` (on `http` or `https`) will then 
 
 For more details see this guide: https://openliberty.io/guides/security-intro.html[Security a web application]
 
+=== Secure Communication
+
+Enabling SSL/TLS communication requires the `transportSecurity-1.0` or `ssl-1.0` feature. The `transportSecurity-1.0` feature is newer and therefore preferred over the `ssl-1.0` feature.
+
+By default, the server will generate a default keystore at `${server.config.dir}/resources/security/key.p12`. 
+
+The password for this keystore will be either:
+
+A. The password defined in `<keyStore id="defaultKeyStore"  password="..." />`
+B. Otherwise, it will use a randomly generated password which can be found in the `${server.config.dir}/server.env` file.
+
+The default SSL configuration will use the `defaultKeyStore` as both keystore and truststore.  All TLS protocols are enabled by default: `TLSv1`, `TLSv1.1`, and `TLSv1.2`. If you are using Java 11 or newer, `TLSv1.3` is also enabled.
+
+By default, a Liberty server uses a self-signed certificate so that the default SSL configuration only trusts itself.  To establish trust with other servers, trusted certificates should be added to the `defaultKeyStore` using a keystore tool like `$JAVA_HOME/bin/keytool`. 
+
+If manually adding trusted certificates is not desireded, then the default SSL configuration can be set to use the JDK's default truststore like so:
+
+.server.xml
+[source,xml]
+----
+<ssl id="defaultSSLConfig"  trustDefaultCerts="true" />
+----
+
 === MicroProfile JWT
 
-Enable one of the `mpJwt` features:
+JSON Web Token (JWT) is a token-based authentication mechanism that offers a lightweight way for security controls and tokens to propagate user identities across different services. Because of these characteristics, it has become a popular security mechanism for microservice applications.
+
+To use it, enable the `mpJwt` feature:
 
 .server.xml
 [source,xml]
@@ -542,7 +567,7 @@ Enable one of the `mpJwt` features:
 </featureManager>
 ----
 
-Then, configure the JWT issuer and public key with MicroProfile config:
+Then, configure the JWT issuer and public key with MicroProfile Config:
 
 .microprofile-config.properties
 [source,properties]
@@ -599,7 +624,7 @@ For more details see this guide: https://openliberty.io/guides/microprofile-jwt.
 - JSON-B implementation can be changed using the `jsonbContainer-1.0` feature
 - JSON-P implementation can be changed using the `jsonpContainer-1.0` or `1.1` feature
 
-== Contribute Corrections
+== Contribute
 
 Find some incorrect information or want to contribute an additional section?
 
