@@ -1,3 +1,3 @@
 #!/bin/bash
-asciidoctor -a toc=left -a source-highlighter=highlightjs docs/index.adoc
+asciidoctor -a favicon=images/favicon.ico -a toc=left -a source-highlighter=highlightjs docs/index.adoc
 
