@@ -8,13 +8,14 @@
 //
 :page-layout: general-reference
 :page-type: general
-= Open Liberty Cheat Sheet
-Andy Guibert <https://twitter.com/andrew_guibert[@andrew_guibert]>
-
 :toc: left
 :source-highlighter: highlightjs
 :sectnums:
-:favicon: ./images/favicon.png
+:favicon: images/favicon.ico
+:keywords: openliberty, documentation, guide, cheat sheet, cheatsheet, configuration, database
+:docinfo: private
+= Open Liberty Cheat Sheet
+Andy Guibert <https://twitter.com/andrew_guibert[@andrew_guibert]>
 
 == What is Open Liberty?
 
