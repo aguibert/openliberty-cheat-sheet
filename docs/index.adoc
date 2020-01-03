@@ -592,6 +592,115 @@ public class SecuredServiceEndpoint {
 
 For more details see this guide: https://openliberty.io/guides/microprofile-jwt.html[Securing microservices with JWTs]
 
+== Messaging
+
+Applications can pass messages among themselves with the Java Message Service (JMS) APIs. Liberty can act as a server of JMS destinations (queues and topics,) or it can connect to another server to access those destinations--either another Liberty server or IBM MQ.
+
+=== JMS Server
+Liberty can act as a JMS server whether or not it is serving any applications. 
+
+.server.xml
+[source,xml]
+----
+<featureManager>
+    <feature>wasJmsServer-1.0</feature>
+</featureManager>
+
+<messagingEngine>
+    <queue id="libertyQueue" />
+    <topicSpace id="libertyTopic" />
+</messagingEngine>
+----
+
+If you want applications on other servers to connect to your JMS server, create a `wasJmsEndpoint`. Without this, only applications served by the same Liberty server can acccess the JMS destinations.
+
+.server.xml
+[source,xml]
+----
+<wasJmsEndpoint id="InboundJmsCommsEndpoint" 
+                host="*" 
+                wasJmsPort="7276" 
+                wasJmsSSLPort="7286" />
+----
+
+=== JMS Client
+Liberty can allow applications to connect to both local and remote JMS destinations. (Local connections will also need the JMS server config from the previous section.)
+
+.server.xml
+[source,xml]
+----
+<featureManager>
+    <feature>wasJmsClient-2.0</feature>
+</featureManager>
+
+<jmsConnectionFactory jndiName="jms/localCF">
+    <properties.wasJms />
+</jmsConnectionFactory>
+
+<jmsConnectionFactory jndiName="jms/remoteCF">
+    <properties.wasJms remoteServerAddress="example.com:7276:BootstrapBasicMessaging" />
+</jmsConnectionFactory>
+----
+
+Liberty can also provide administered objects for queues and topics that applications can use.
+
+.server.xml
+[source,xml]
+----
+<jmsTopic jndiName="jms/jmsLocalTopic">
+    <properties.wasJms topicName="myTopic" topicSpace="libertyTopic" />
+</jmsQueue>
+
+<jmsQueue jndiName="jms/jmsRemoteQueue">
+    <properties.wasJms queueName="libertyQueue" />
+</jmsQueue>
+----
+
+=== IBM MQ Client
+In addition to other Liberty servers, Liberty can connect to IBM MQ servers and allow applications to access destinations hosted in MQ Queue Managers. You don't need the `wasJmsClient` feature to connect to MQ.
+
+.server.xml
+[source,xml]
+----
+<resourceAdapter id="mqJmsRa" location="/path/to/wmq.jmsra.rar">
+    <classloader apiTypeVisibility="spec, ibm-api, api, third-party"/>
+</resourceAdapter>
+
+<jmsQueueConnectionFactory id="MQRemoteQCF" jndiName="jms/mqRemoteQCF">
+    <properties.mqJmsRa channel="DEV.APP.SVRCONN" hostName="localhost" port="1414" queueManager="mqtest"/>
+</jmsQueueConnectionFactory>
+
+<jmsQueue id="MQTestQueue" jndiName="jms/mqRemoteQueue">
+    <properties.mqJmsRa baseQueueManagerName="mqtest" baseQueueName="DEV.QUEUE.1"/>
+</jmsQueue>
+
+<jmsTopicConnectionFactory id="MQRemoteTCF" jndiName="jms/mqRemoteTCF">
+    <properties.mqJmsRa channel="DEV.APP.SVRCONN" hostName="localhost" port="1414" queueManager="mqtest" clientId="myClientId"/>
+</jmsTopicConnectionFactory>
+
+<jmsTopic id="MQTestTopic" jndiName="jms/mqRemoteTopic">
+    <properties.mqJmsRa baseQueueManagerName="mqtest" baseTopicName="dev1/"/>
+</jmsTopic>
+----
+
+To run an MQ Docker container locally:
+
+[source,shell]
+----
+docker run -it --rm=true --name mq-liberty \
+           -e LICENSE=accept \
+           -e MQ_QMGR_NAME=mqtest \
+           -e MQ_ADMIN_PASSWORD=testpassword \
+           -p 1414:1414 \
+           -p 9443:9443 \
+           ibmcom/mq:9.1.4.0
+----
+
+The `wmq.jmsra.rar` file needed to connect to MQ can be found in the running Docker container using the command 
+
+[source, shell]
+docker cp mq-liberty:/opt/mqm/java/lib/jca/wmq.jmsra.rar /destination/folder
+
 == Included OSS Components
 
 [options="header",cols="1,1"]
