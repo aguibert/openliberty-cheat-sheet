@@ -592,6 +592,163 @@ public class SecuredServiceEndpoint {
 
 For more details see this guide: https://openliberty.io/guides/microprofile-jwt.html[Securing microservices with JWTs]
 
+== Messaging
+
+Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics. 
+
+Some terms commonly used in JMS:
+
+- *Message:* Information that is being sent via JMS. Payload can be any kind of data, from plain text and numbers to serialized Java objects.
+- *Destination:* A specific place for messages to be stored and retrieved by name. Common types are queues and topics.
+- *Queue:* A destination where each message is delivered to the first consumer to receive a message.
+- *Topic:* A destination where each message is delivered to all consumers subscribed to it.
+- *Producer:* Any code that produces a message onto a JMS destination. 
+- *Consumer:* Any code that subscribes to a destination and receives messages from it.
+
+=== JMS Server
+Liberty can act as a JMS server whether or not it is serving any applications using the `wasJmsServer-1.0` feature. 
+
+.server.xml
+[source,xml]
+----
+<featureManager>
+    <feature>wasJmsServer-1.0</feature>
+</featureManager>
+
+<messagingEngine>
+    <queue id="myQueue" />
+    <topicSpace id="myTopicSpace" />
+</messagingEngine>
+----
+
+The `messagingEngine` element defines all JMS destinations served by Liberty. Note that topics are organized into topic spaces here--the individual topics are created and subscribed to by the applications or by defining administered objects representing them in the JMS client.
+
+If you want applications on other servers to connect to your JMS server, create a `wasJmsEndpoint`. Without this, only applications served by the same Liberty server can acccess the JMS destinations.
+
+.server.xml
+[source,xml]
+----
+<wasJmsEndpoint host="*" 
+                wasJmsPort="7276" 
+                wasJmsSSLPort="7286" />
+----
+
+=== JMS Client
+Liberty can allow applications to connect to both local and remote JMS destinations. Local connections will also need the JMS server config from the previous section. To connect to either Liberty JMS servers or traditional WebSphere Service Integration Bus, use the `wasJmsClient` feature. The feature has two versions, 1.1 and 2.0, that correspond to the matching versions of the `jms` feature.
+
+.server.xml
+[source,xml]
+----
+<featureManager>
+    <feature>wasJmsClient-2.0</feature>
+    <feature>jms-2.0</feature>
+</featureManager>
+
+<jmsConnectionFactory jndiName="jms/localCF">
+    <properties.wasJms />
+</jmsConnectionFactory>
+
+<jmsConnectionFactory jndiName="jms/remoteCF">
+    <properties.wasJms remoteServerAddress="example.com:7276:BootstrapBasicMessaging" />
+</jmsConnectionFactory>
+----
+
+The format for `remoteServerAddress` is `hostname:port:transportChain`, where `transportChain` is either `BootstrapBasicMessaging` for non-secure JMS endpoints or `BootstrapSecureMessaging` for secure JMS endpoints. You can optionally omit the `:transportChain` portion of the address if you are using `BootstrapBasicMessaging`.
+
+Liberty can provide administered objects for queues and topics that applications can use. This is where a topic can be subscribed to within a specific topic space on the JMS server. Applications can use these objects both to produce messages on the destination and consume messages from the destination.
+
+.server.xml
+[source,xml]
+----
+<jmsTopic jndiName="jms/jmsLocalTopic">
+    <properties.wasJms topicName="myTopic" topicSpace="myTopicSpace" />
+</jmsQueue>
+
+<jmsQueue jndiName="jms/jmsRemoteQueue">
+    <properties.wasJms queueName="myQueue" />
+</jmsQueue>
+----
+
+=== IBM MQ Client
+Liberty can connect to IBM MQ servers and other JMS servers (for example, ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don't need the `wasJmsClient` feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.
+
+.server.xml
+[source,xml]
+----
+<featureManager>
+    <feature>jms-2.0</feature>
+</featureManager>
+
+<resourceAdapter id="mqJmsRa" location="/path/to/wmq.jmsra.rar">
+    <classloader apiTypeVisibility="+third-party"/>
+</resourceAdapter>
+
+<jmsQueueConnectionFactory id="myRemoteQueueConnectionFactory" jndiName="jms/mqRemoteQCF">
+    <properties.mqJmsRa channel="DEV.APP.SVRCONN" hostName="localhost" port="1414" queueManager="mqtest"/>
+</jmsQueueConnectionFactory>
+
+<jmsQueue id="myMQQueue" jndiName="jms/mqRemoteQueue">
+    <properties.mqJmsRa baseQueueManagerName="mqtest" baseQueueName="DEV.QUEUE.1"/>
+</jmsQueue>
+
+<jmsTopicConnectionFactory id="myRemoteTopicConnectionFactory" jndiName="jms/mqRemoteTCF">
+    <properties.mqJmsRa channel="DEV.APP.SVRCONN" hostName="localhost" port="1414" queueManager="mqtest" clientId="myClientId"/>
+</jmsTopicConnectionFactory>
+
+<jmsTopic id="myMQTopic" jndiName="jms/mqRemoteTopic">
+    <properties.mqJmsRa baseQueueManagerName="mqtest" baseTopicName="dev1/"/>
+</jmsTopic>
+----
+
+To run an MQ Docker container locally:
+
+[source,shell]
+----
+docker run -it --rm=true --name mq-liberty \
+           -e LICENSE=accept \
+           -e MQ_QMGR_NAME=mqtest \
+           -e MQ_ADMIN_PASSWORD=testpassword \
+           -p 1414:1414 \
+           -p 9443:9443 \
+           ibmcom/mq:9.1.4.0
+----
+
+The `wmq.jmsra.rar` file needed to connect to MQ can be found in the running Docker container using the command 
+
+[source, shell]
+docker cp mq-liberty:/opt/mqm/java/lib/jca/wmq.jmsra.rar /destination/folder
+
+=== Producing and Consuming Messages
+
+Regardless of how you configure your administered objects and what server they connect to, you will access them within your application in the same way. Obtain the destination and connection factory using JNDI, then use the connection factory to create a connection, use the connection to create a session, and use the session to create a producer and/or consumer that can interact with the destination.
+
+[source, java]
+----
+// Note: In EJBs or CDI beans, these lookups can be replaced with @Resource annotations
+QueueConnectionFactory factory = (QueueConnectionFactory) InitialContext.doLookup("jms/mqRemoteQCF");
+Queue queue = (Queue) InitialContext.doLookup("jms/mqRemoteQueue");
+
+QueueConnection connection = factory.createQueueConnection();
+QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+
+// Send a message to the queue
+TextMessage message = session.createTextMessage("Your Message Here");
+MessageProducer producer = session.createProducer(queue);
+producer.send(message);
+
+producer.close();
+
+// Receive a message from the queue
+MessageConsumer consumer = session.createConsumer(queue);
+TextMessage result = (TextMessage) consumer.receieve(5000L);
+System.out.println("Got " + result);
+
+consumer.close();
+
+session.close();
+conn.close();
+----
+
 == Included OSS Components
 
 [options="header",cols="1,1"]

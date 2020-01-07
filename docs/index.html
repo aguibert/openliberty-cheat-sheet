@@ -495,9 +495,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_microprofile_jwt">11.3. MicroProfile JWT</a></li>
 </ul>
 </li>
-<li><a href="#_included_oss_components">12. Included OSS Components</a></li>
-<li><a href="#_replaceable_components">13. Replaceable Components</a></li>
-<li><a href="#_contribute">14. Contribute</a></li>
+<li><a href="#_messaging">12. Messaging</a>
+<ul class="sectlevel2">
+<li><a href="#_jms_server">12.1. JMS Server</a></li>
+<li><a href="#_jms_client">12.2. JMS Client</a></li>
+<li><a href="#_ibm_mq_client">12.3. IBM MQ Client</a></li>
+<li><a href="#_producing_and_consuming_messages">12.4. Producing and Consuming Messages</a></li>
+</ul>
+</li>
+<li><a href="#_included_oss_components">13. Included OSS Components</a></li>
+<li><a href="#_replaceable_components">14. Replaceable Components</a></li>
+<li><a href="#_contribute">15. Contribute</a></li>
 </ul>
 </div>
 </div>
@@ -1363,7 +1371,203 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_included_oss_components">12. Included OSS Components</h2>
+<h2 id="_messaging">12. Messaging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics.</p>
+</div>
+<div class="paragraph">
+<p>Some terms commonly used in JMS:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>Message:</strong> Information that is being sent via JMS. Payload can be any kind of data, from plain text and numbers to serialized Java objects.</p>
+</li>
+<li>
+<p><strong>Destination:</strong> A specific place for messages to be stored and retrieved by name. Common types are queues and topics.</p>
+</li>
+<li>
+<p><strong>Queue:</strong> A destination where each message is delivered to the first consumer to receive a message.</p>
+</li>
+<li>
+<p><strong>Topic:</strong> A destination where each message is delivered to all consumers subscribed to it.</p>
+</li>
+<li>
+<p><strong>Producer:</strong> Any code that produces a message onto a JMS destination.</p>
+</li>
+<li>
+<p><strong>Consumer:</strong> Any code that subscribes to a destination and receives messages from it.</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="_jms_server">12.1. JMS Server</h3>
+<div class="paragraph">
+<p>Liberty can act as a JMS server whether or not it is serving any applications using the <code>wasJmsServer-1.0</code> feature.</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;wasJmsServer-1.0&lt;/feature&gt;
+&lt;/featureManager&gt;
+
+&lt;messagingEngine&gt;
+    &lt;queue id="myQueue" /&gt;
+    &lt;topicSpace id="myTopicSpace" /&gt;
+&lt;/messagingEngine&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>messagingEngine</code> element defines all JMS destinations served by Liberty. Note that topics are organized into topic spaces here&#8212;&#8203;the individual topics are created and subscribed to by the applications or by defining administered objects representing them in the JMS client.</p>
+</div>
+<div class="paragraph">
+<p>If you want applications on other servers to connect to your JMS server, create a <code>wasJmsEndpoint</code>. Without this, only applications served by the same Liberty server can acccess the JMS destinations.</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;wasJmsEndpoint host="*"
+                wasJmsPort="7276"
+                wasJmsSSLPort="7286" /&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_jms_client">12.2. JMS Client</h3>
+<div class="paragraph">
+<p>Liberty can allow applications to connect to both local and remote JMS destinations. Local connections will also need the JMS server config from the previous section. To connect to either Liberty JMS servers or traditional WebSphere Service Integration Bus, use the <code>wasJmsClient</code> feature. The feature has two versions, 1.1 and 2.0, that correspond to the matching versions of the <code>jms</code> feature.</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;wasJmsClient-2.0&lt;/feature&gt;
+    &lt;feature&gt;jms-2.0&lt;/feature&gt;
+&lt;/featureManager&gt;
+
+&lt;jmsConnectionFactory jndiName="jms/localCF"&gt;
+    &lt;properties.wasJms /&gt;
+&lt;/jmsConnectionFactory&gt;
+
+&lt;jmsConnectionFactory jndiName="jms/remoteCF"&gt;
+    &lt;properties.wasJms remoteServerAddress="example.com:7276:BootstrapBasicMessaging" /&gt;
+&lt;/jmsConnectionFactory&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The format for <code>remoteServerAddress</code> is <code>hostname:port:transportChain</code>, where <code>transportChain</code> is either <code>BootstrapBasicMessaging</code> for non-secure JMS endpoints or <code>BootstrapSecureMessaging</code> for secure JMS endpoints. You can optionally omit the <code>:transportChain</code> portion of the address if you are using <code>BootstrapBasicMessaging</code>.</p>
+</div>
+<div class="paragraph">
+<p>Liberty can provide administered objects for queues and topics that applications can use. This is where a topic can be subscribed to within a specific topic space on the JMS server. Applications can use these objects both to produce messages on the destination and consume messages from the destination.</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;jmsTopic jndiName="jms/jmsLocalTopic"&gt;
+    &lt;properties.wasJms topicName="myTopic" topicSpace="myTopicSpace" /&gt;
+&lt;/jmsQueue&gt;
+
+&lt;jmsQueue jndiName="jms/jmsRemoteQueue"&gt;
+    &lt;properties.wasJms queueName="myQueue" /&gt;
+&lt;/jmsQueue&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_ibm_mq_client">12.3. IBM MQ Client</h3>
+<div class="paragraph">
+<p>Liberty can connect to IBM MQ servers and other JMS servers (for example, ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don&#8217;t need the <code>wasJmsClient</code> feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;jms-2.0&lt;/feature&gt;
+&lt;/featureManager&gt;
+
+&lt;resourceAdapter id="mqJmsRa" location="/path/to/wmq.jmsra.rar"&gt;
+    &lt;classloader apiTypeVisibility="+third-party"/&gt;
+&lt;/resourceAdapter&gt;
+
+&lt;jmsQueueConnectionFactory id="myRemoteQueueConnectionFactory" jndiName="jms/mqRemoteQCF"&gt;
+    &lt;properties.mqJmsRa channel="DEV.APP.SVRCONN" hostName="localhost" port="1414" queueManager="mqtest"/&gt;
+&lt;/jmsQueueConnectionFactory&gt;
+
+&lt;jmsQueue id="myMQQueue" jndiName="jms/mqRemoteQueue"&gt;
+    &lt;properties.mqJmsRa baseQueueManagerName="mqtest" baseQueueName="DEV.QUEUE.1"/&gt;
+&lt;/jmsQueue&gt;
+
+&lt;jmsTopicConnectionFactory id="myRemoteTopicConnectionFactory" jndiName="jms/mqRemoteTCF"&gt;
+    &lt;properties.mqJmsRa channel="DEV.APP.SVRCONN" hostName="localhost" port="1414" queueManager="mqtest" clientId="myClientId"/&gt;
+&lt;/jmsTopicConnectionFactory&gt;
+
+&lt;jmsTopic id="myMQTopic" jndiName="jms/mqRemoteTopic"&gt;
+    &lt;properties.mqJmsRa baseQueueManagerName="mqtest" baseTopicName="dev1/"/&gt;
+&lt;/jmsTopic&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To run an MQ Docker container locally:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run -it --rm=true --name mq-liberty \
+           -e LICENSE=accept \
+           -e MQ_QMGR_NAME=mqtest \
+           -e MQ_ADMIN_PASSWORD=testpassword \
+           -p 1414:1414 \
+           -p 9443:9443 \
+           ibmcom/mq:9.1.4.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The <code>wmq.jmsra.rar</code> file needed to connect to MQ can be found in the running Docker container using the command</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker cp mq-liberty:/opt/mqm/java/lib/jca/wmq.jmsra.rar /destination/folder</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_producing_and_consuming_messages">12.4. Producing and Consuming Messages</h3>
+<div class="paragraph">
+<p>Regardless of how you configure your administered objects and what server they connect to, you will access them within your application in the same way. Obtain the destination and connection factory using JNDI, then use the connection factory to create a connection, use the connection to create a session, and use the session to create a producer and/or consumer that can interact with the destination.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// Note: In EJBs or CDI beans, these lookups can be replaced with @Resource annotations
+QueueConnectionFactory factory = (QueueConnectionFactory) InitialContext.doLookup("jms/mqRemoteQCF");
+Queue queue = (Queue) InitialContext.doLookup("jms/mqRemoteQueue");
+
+QueueConnection connection = factory.createQueueConnection();
+QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+
+// Send a message to the queue
+TextMessage message = session.createTextMessage("Your Message Here");
+MessageProducer producer = session.createProducer(queue);
+producer.send(message);
+
+producer.close();
+
+// Receive a message from the queue
+MessageConsumer consumer = session.createConsumer(queue);
+TextMessage result = (TextMessage) consumer.receieve(5000L);
+System.out.println("Got " + result);
+
+consumer.close();
+
+session.close();
+conn.close();</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_included_oss_components">13. Included OSS Components</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1458,7 +1662,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_replaceable_components">13. Replaceable Components</h2>
+<h2 id="_replaceable_components">14. Replaceable Components</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1479,7 +1683,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_contribute">14. Contribute</h2>
+<h2 id="_contribute">15. Contribute</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Find some incorrect information or want to contribute an additional section?</p>
@@ -1492,7 +1696,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-02 15:31:54 -0600
+Last updated 2020-01-07 10:48:29 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
