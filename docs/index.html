@@ -488,19 +488,19 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_derby_in_memory_db">10.7. Derby (in-memory DB)</a></li>
 </ul>
 </li>
-<li><a href="#_security">11. Security</a>
+<li><a href="#_messaging">11. Messaging</a>
 <ul class="sectlevel2">
-<li><a href="#_basic_authentication">11.1. Basic authentication</a></li>
-<li><a href="#_secure_communication">11.2. Secure Communication</a></li>
-<li><a href="#_microprofile_jwt">11.3. MicroProfile JWT</a></li>
+<li><a href="#_jms_server">11.1. JMS Server</a></li>
+<li><a href="#_jms_client">11.2. JMS Client</a></li>
+<li><a href="#_ibm_mq_client">11.3. IBM MQ Client</a></li>
+<li><a href="#_producing_and_consuming_messages">11.4. Producing and Consuming Messages</a></li>
 </ul>
 </li>
-<li><a href="#_messaging">12. Messaging</a>
+<li><a href="#_security">12. Security</a>
 <ul class="sectlevel2">
-<li><a href="#_jms_server">12.1. JMS Server</a></li>
-<li><a href="#_jms_client">12.2. JMS Client</a></li>
-<li><a href="#_ibm_mq_client">12.3. IBM MQ Client</a></li>
-<li><a href="#_producing_and_consuming_messages">12.4. Producing and Consuming Messages</a></li>
+<li><a href="#_basic_authentication">12.1. Basic authentication</a></li>
+<li><a href="#_secure_communication">12.2. Secure Communication</a></li>
+<li><a href="#_microprofile_jwt">12.3. MicroProfile JWT</a></li>
 </ul>
 </li>
 <li><a href="#_included_oss_components">13. Included OSS Components</a></li>
@@ -1232,146 +1232,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_security">11. Security</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>To enable security for your application, enable the <code>appSecurity-3.0</code> feature. This will cause all application endpoints requiring a role to go through HTTPS and some form of authentication.</p>
-</div>
-<div class="sect2">
-<h3 id="_basic_authentication">11.1. Basic authentication</h3>
-<div class="paragraph">
-<p>A simple form of authentication is the <code>&lt;basicRegistry&gt;</code> element, which allows you to directly configure user/password pairs.</p>
-</div>
-<div class="listingblock">
-<div class="title">server.xml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
-    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
-&lt;/featureManager&gt;
-
-&lt;basicRegistry id="basic"&gt;
-    &lt;user name="bob" password="bobpwd"/&gt;
-&lt;/basicRegistry&gt;
-
-&lt;webApplication location="myApp.war"&gt;
-    &lt;application-bnd&gt;
-        &lt;!-- this can also be defined in web.xml instead --&gt;
-        &lt;security-role name="admin"&gt;
-            &lt;user name="bob"/&gt;
-        &lt;/security-role&gt;
-    &lt;/application-bnd&gt;
-&lt;/webApplication&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then, managed resources (JAX-RS endpoints, servlets, etc) can be secured with <code>@RolesAllowed</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/")
-@ApplicationScoped
-@RolesAllowed("admin")
-public class HelloEndpoint {
-
-    @GET
-    public String sayHello() {
-        return "Hello World";
-    }
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Accessing any endpoints in the <code>HelloEndpoint</code> (on <code>http</code> or <code>https</code>) will then then restrict access to a user in the <code>admin</code> role (in this case <code>bob</code>).</p>
-</div>
-<div class="paragraph">
-<p>For more details see this guide: <a href="https://openliberty.io/guides/security-intro.html">Security a web application</a></p>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_secure_communication">11.2. Secure Communication</h3>
-<div class="paragraph">
-<p>Enabling SSL/TLS communication requires the <code>transportSecurity-1.0</code> or <code>ssl-1.0</code> feature. The <code>transportSecurity-1.0</code> feature is newer and therefore preferred over the <code>ssl-1.0</code> feature.</p>
-</div>
-<div class="paragraph">
-<p>By default, the server will generate a default keystore at <code>${server.config.dir}/resources/security/key.p12</code>.</p>
-</div>
-<div class="paragraph">
-<p>The password for this keystore will be either:</p>
-</div>
-<div class="olist upperalpha">
-<ol class="upperalpha">
-<li>
-<p>The password defined in <code>&lt;keyStore id="defaultKeyStore"  password="&#8230;&#8203;" /&gt;</code></p>
-</li>
-<li>
-<p>Otherwise, it will use a randomly generated password which can be found in the <code>${server.config.dir}/server.env</code> file.</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>The default SSL configuration will use the <code>defaultKeyStore</code> as both keystore and truststore.  All TLS protocols are enabled by default: <code>TLSv1</code>, <code>TLSv1.1</code>, and <code>TLSv1.2</code>. If you are using Java 11 or newer, <code>TLSv1.3</code> is also enabled.</p>
-</div>
-<div class="paragraph">
-<p>By default, a Liberty server uses a self-signed certificate so that the default SSL configuration only trusts itself.  To establish trust with other servers, trusted certificates should be added to the <code>defaultKeyStore</code> using a keystore tool like <code>$JAVA_HOME/bin/keytool</code>.</p>
-</div>
-<div class="paragraph">
-<p>If manually adding trusted certificates is not desireded, then the default SSL configuration can be set to use the JDK&#8217;s default truststore like so:</p>
-</div>
-<div class="listingblock">
-<div class="title">server.xml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ssl id="defaultSSLConfig"  trustDefaultCerts="true" /&gt;</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_microprofile_jwt">11.3. MicroProfile JWT</h3>
-<div class="paragraph">
-<p>JSON Web Token (JWT) is a token-based authentication mechanism that offers a lightweight way for security controls and tokens to propagate user identities across different services. Because of these characteristics, it has become a popular security mechanism for microservice applications.</p>
-</div>
-<div class="paragraph">
-<p>To use it, enable the <code>mpJwt</code> feature:</p>
-</div>
-<div class="listingblock">
-<div class="title">server.xml</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
-    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
-    &lt;feature&gt;mpJwt-1.1&lt;/feature&gt;
-&lt;/featureManager&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Then, configure the JWT issuer and public key with MicroProfile Config:</p>
-</div>
-<div class="listingblock">
-<div class="title">microprofile-config.properties</div>
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># If you set/override these values using environment variables,
-# convert all '.' chars to '_' chars in property key names
-mp.jwt.verify.publickey=&lt;the JWT issuer's public key&gt;
-mp.jwt.verify.issuer=http://someJwtIssuer.com</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Lastly, resources can be secured using the <code>@RolesAllowed</code> annotation:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/")
-@RequestScoped
-@RolesAllowed("users") // Requires jwts to have "group=users" claim
-public class SecuredServiceEndpoint {</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>For more details see this guide: <a href="https://openliberty.io/guides/microprofile-jwt.html">Securing microservices with JWTs</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_messaging">12. Messaging</h2>
+<h2 id="_messaging">11. Messaging</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics.</p>
@@ -1402,7 +1263,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="_jms_server">12.1. JMS Server</h3>
+<h3 id="_jms_server">11.1. JMS Server</h3>
 <div class="paragraph">
 <p>Liberty can act as a JMS server whether or not it is serving any applications using the <code>wasJmsServer-1.0</code> feature.</p>
 </div>
@@ -1423,21 +1284,19 @@ public class SecuredServiceEndpoint {</code></pre>
 <p>The <code>messagingEngine</code> element defines all JMS destinations served by Liberty. Note that topics are organized into topic spaces here&#8212;&#8203;the individual topics are created and subscribed to by the applications or by defining administered objects representing them in the JMS client.</p>
 </div>
 <div class="paragraph">
-<p>If you want applications on other servers to connect to your JMS server, create a <code>wasJmsEndpoint</code>. Without this, only applications served by the same Liberty server can acccess the JMS destinations.</p>
+<p>If you want applications on other servers to connect to your JMS server, create a <code>&lt;wasJmsEndpoint&gt;</code>. Without this, only applications served by the same Liberty server can acccess the JMS destinations.</p>
 </div>
 <div class="listingblock">
 <div class="title">server.xml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;wasJmsEndpoint host="*"
-                wasJmsPort="7276"
-                wasJmsSSLPort="7286" /&gt;</code></pre>
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;wasJmsEndpoint host="*"  wasJmsPort="7276" wasJmsSSLPort="7286" /&gt;</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_jms_client">12.2. JMS Client</h3>
+<h3 id="_jms_client">11.2. JMS Client</h3>
 <div class="paragraph">
-<p>Liberty can allow applications to connect to both local and remote JMS destinations. Local connections will also need the JMS server config from the previous section. To connect to either Liberty JMS servers or traditional WebSphere Service Integration Bus, use the <code>wasJmsClient</code> feature. The feature has two versions, 1.1 and 2.0, that correspond to the matching versions of the <code>jms</code> feature.</p>
+<p>Liberty allows applications to connect to both local and remote JMS destinations. Local connections will also need the JMS server config from the previous section. To connect to either Liberty JMS servers or traditional WebSphere Service Integration Bus, use the <code>wasJmsClient</code> feature. The feature has two versions, 1.1 and 2.0, that correspond to the matching versions of the <code>jms</code> feature.</p>
 </div>
 <div class="listingblock">
 <div class="title">server.xml</div>
@@ -1476,9 +1335,9 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_ibm_mq_client">12.3. IBM MQ Client</h3>
+<h3 id="_ibm_mq_client">11.3. IBM MQ Client</h3>
 <div class="paragraph">
-<p>Liberty can connect to IBM MQ servers and other JMS servers (for example, ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don&#8217;t need the <code>wasJmsClient</code> feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.</p>
+<p>Liberty can connect to IBM MQ servers and other JMS servers (e.g. ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don&#8217;t need the <code>wasJmsClient</code> feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.</p>
 </div>
 <div class="listingblock">
 <div class="title">server.xml</div>
@@ -1532,15 +1391,17 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_producing_and_consuming_messages">12.4. Producing and Consuming Messages</h3>
+<h3 id="_producing_and_consuming_messages">11.4. Producing and Consuming Messages</h3>
 <div class="paragraph">
 <p>Regardless of how you configure your administered objects and what server they connect to, you will access them within your application in the same way. Obtain the destination and connection factory using JNDI, then use the connection factory to create a connection, use the connection to create a session, and use the session to create a producer and/or consumer that can interact with the destination.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">// Note: In EJBs or CDI beans, these lookups can be replaced with @Resource annotations
-QueueConnectionFactory factory = (QueueConnectionFactory) InitialContext.doLookup("jms/mqRemoteQCF");
-Queue queue = (Queue) InitialContext.doLookup("jms/mqRemoteQueue");
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">import javax.jms.*;
+
+// Note: In managed components (CDI beans, servlets, EJBs, etc) lookups can be replaced with @Resource annotations
+QueueConnectionFactory factory = InitialContext.doLookup("jms/mqRemoteQCF");
+Queue queue = InitialContext.doLookup("jms/mqRemoteQueue");
 
 QueueConnection connection = factory.createQueueConnection();
 QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -1562,6 +1423,145 @@ consumer.close();
 session.close();
 conn.close();</code></pre>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_security">12. Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To enable security for your application, enable the <code>appSecurity-3.0</code> feature. This will cause all application endpoints requiring a role to go through HTTPS and some form of authentication.</p>
+</div>
+<div class="sect2">
+<h3 id="_basic_authentication">12.1. Basic authentication</h3>
+<div class="paragraph">
+<p>A simple form of authentication is the <code>&lt;basicRegistry&gt;</code> element, which allows you to directly configure user/password pairs.</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
+&lt;/featureManager&gt;
+
+&lt;basicRegistry id="basic"&gt;
+    &lt;user name="bob" password="bobpwd"/&gt;
+&lt;/basicRegistry&gt;
+
+&lt;webApplication location="myApp.war"&gt;
+    &lt;application-bnd&gt;
+        &lt;!-- this can also be defined in web.xml instead --&gt;
+        &lt;security-role name="admin"&gt;
+            &lt;user name="bob"/&gt;
+        &lt;/security-role&gt;
+    &lt;/application-bnd&gt;
+&lt;/webApplication&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, managed resources (JAX-RS endpoints, servlets, etc) can be secured with <code>@RolesAllowed</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/")
+@ApplicationScoped
+@RolesAllowed("admin")
+public class HelloEndpoint {
+
+    @GET
+    public String sayHello() {
+        return "Hello World";
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Accessing any endpoints in the <code>HelloEndpoint</code> (on <code>http</code> or <code>https</code>) will then then restrict access to a user in the <code>admin</code> role (in this case <code>bob</code>).</p>
+</div>
+<div class="paragraph">
+<p>For more details see this guide: <a href="https://openliberty.io/guides/security-intro.html">Security a web application</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_secure_communication">12.2. Secure Communication</h3>
+<div class="paragraph">
+<p>Enabling SSL/TLS communication requires the <code>transportSecurity-1.0</code> or <code>ssl-1.0</code> feature. The <code>transportSecurity-1.0</code> feature is newer and therefore preferred over the <code>ssl-1.0</code> feature.</p>
+</div>
+<div class="paragraph">
+<p>By default, the server will generate a default keystore at <code>${server.config.dir}/resources/security/key.p12</code>.</p>
+</div>
+<div class="paragraph">
+<p>The password for this keystore will be either:</p>
+</div>
+<div class="olist upperalpha">
+<ol class="upperalpha">
+<li>
+<p>The password defined in <code>&lt;keyStore id="defaultKeyStore"  password="&#8230;&#8203;" /&gt;</code></p>
+</li>
+<li>
+<p>Otherwise, it will use a randomly generated password which can be found in the <code>${server.config.dir}/server.env</code> file.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The default SSL configuration will use the <code>defaultKeyStore</code> as both keystore and truststore.  All TLS protocols are enabled by default: <code>TLSv1</code>, <code>TLSv1.1</code>, and <code>TLSv1.2</code>. If you are using Java 11 or newer, <code>TLSv1.3</code> is also enabled.</p>
+</div>
+<div class="paragraph">
+<p>By default, a Liberty server uses a self-signed certificate so that the default SSL configuration only trusts itself.  To establish trust with other servers, trusted certificates should be added to the <code>defaultKeyStore</code> using a keystore tool like <code>$JAVA_HOME/bin/keytool</code>.</p>
+</div>
+<div class="paragraph">
+<p>If manually adding trusted certificates is not desireded, then the default SSL configuration can be set to use the JDK&#8217;s default truststore like so:</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;ssl id="defaultSSLConfig"  trustDefaultCerts="true" /&gt;</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_microprofile_jwt">12.3. MicroProfile JWT</h3>
+<div class="paragraph">
+<p>JSON Web Token (JWT) is a token-based authentication mechanism that offers a lightweight way for security controls and tokens to propagate user identities across different services. Because of these characteristics, it has become a popular security mechanism for microservice applications.</p>
+</div>
+<div class="paragraph">
+<p>To use it, enable the <code>mpJwt</code> feature:</p>
+</div>
+<div class="listingblock">
+<div class="title">server.xml</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;featureManager&gt;
+    &lt;feature&gt;appSecurity-3.0&lt;/feature&gt;
+    &lt;feature&gt;mpJwt-1.1&lt;/feature&gt;
+&lt;/featureManager&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Then, configure the JWT issuer and public key with MicroProfile Config:</p>
+</div>
+<div class="listingblock">
+<div class="title">microprofile-config.properties</div>
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="properties" class="language-properties hljs"># If you set/override these values using environment variables,
+# convert all '.' chars to '_' chars in property key names
+mp.jwt.verify.publickey=&lt;the JWT issuer's public key&gt;
+mp.jwt.verify.issuer=http://someJwtIssuer.com</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Lastly, resources can be secured using the <code>@RolesAllowed</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@Path("/")
+@RequestScoped
+@RolesAllowed("users") // Requires jwts to have "group=users" claim
+public class SecuredServiceEndpoint {</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more details see this guide: <a href="https://openliberty.io/guides/microprofile-jwt.html">Securing microservices with JWTs</a></p>
 </div>
 </div>
 </div>
@@ -1696,7 +1696,7 @@ conn.close();</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-07 10:48:29 -0600
+Last updated 2020-01-07 12:11:25 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
