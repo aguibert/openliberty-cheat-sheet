@@ -476,7 +476,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_maven">6. Maven</a></li>
 <li><a href="#_gradle">7. Gradle</a></li>
 <li><a href="#_docker">8. Docker</a></li>
-<li><a href="#_supported_java_se_versions">9. Supported Java SE versions</a></li>
+<li><a href="#_supported_java_versions">9. Supported Java versions</a></li>
 <li><a href="#_databases">10. Databases</a>
 <ul class="sectlevel2">
 <li><a href="#_validating_connections">10.1. Validating Connections</a></li>
@@ -488,7 +488,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_derby_in_memory_db">10.7. Derby (in-memory DB)</a></li>
 </ul>
 </li>
-<li><a href="#_messaging">11. Messaging</a>
+<li><a href="#_messaging_jms">11. Messaging (JMS)</a>
 <ul class="sectlevel2">
 <li><a href="#_jms_server">11.1. JMS Server</a></li>
 <li><a href="#_jms_client">11.2. JMS Client</a></li>
@@ -503,9 +503,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_microprofile_jwt">12.3. MicroProfile JWT</a></li>
 </ul>
 </li>
-<li><a href="#_included_oss_components">13. Included OSS Components</a></li>
-<li><a href="#_replaceable_components">14. Replaceable Components</a></li>
-<li><a href="#_contribute">15. Contribute</a></li>
+<li><a href="#_integration_testing">13. Integration Testing</a>
+<ul class="sectlevel2">
+<li><a href="#_microshed_testing">13.1. MicroShed Testing</a></li>
+<li><a href="#_arquillian">13.2. Arquillian</a></li>
+</ul>
+</li>
+<li><a href="#_included_oss_components">14. Included OSS Components</a></li>
+<li><a href="#_replaceable_components">15. Replaceable Components</a></li>
+<li><a href="#_contribute">16. Contribute</a></li>
 </ul>
 </div>
 </div>
@@ -1030,7 +1036,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_supported_java_se_versions">9. Supported Java SE versions</h2>
+<h2 id="_supported_java_versions">9. Supported Java versions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>OpenLiberty is currently supported on Java SE 8, 11, and 13. Official documentation can be found here: <a href="https://openliberty.io/docs/ref/general/#java-se.html">JavaSE support</a></p>
@@ -1232,7 +1238,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_messaging">11. Messaging</h2>
+<h2 id="_messaging_jms">11. Messaging (JMS)</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics.</p>
@@ -1567,7 +1573,62 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_included_oss_components">13. Included OSS Components</h2>
+<h2 id="_integration_testing">13. Integration Testing</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>There are two primary frameworks available to help make testing your Liberty applications easier:</p>
+</div>
+<div class="sect2">
+<h3 id="_microshed_testing">13.1. MicroShed Testing</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Ideal for testing apps that run in Docker containers</p>
+</li>
+<li>
+<p>Ideal for testing REST endpoints</p>
+</li>
+<li>
+<p>Ideal for testing apps that depend on other services (e.g. database or another HTTP-based service)</p>
+</li>
+<li>
+<p>Ideal for black-box testing</p>
+</li>
+<li>
+<p>OpenLiberty guide available here: <a href="https://openliberty.io/guides/microshed-testing.html">Testing a MicroProfile or Jakarta EE application</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See the <a href="https://microshed.org/microshed-testing/">MicroShed Testing</a> website for full documentation</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_arquillian">13.2. Arquillian</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Ideal for grey-box testing</p>
+</li>
+<li>
+<p>Ideal for testing apps that are not in containers</p>
+</li>
+<li>
+<p>Works with JUnit 4, JUnit 5, and TestNG (MicroShed only works with JUnit 5)</p>
+</li>
+<li>
+<p>OpenLiberty guide available here: <a href="https://openliberty.io/guides/arquillian-managed.html">Testing microservices with the Arquillian managed container</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>See <a href="http://arquillian.org/docs/">arquillian.org</a> for full documentation</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_included_oss_components">14. Included OSS Components</h2>
 <div class="sectionbody">
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1662,7 +1723,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_replaceable_components">14. Replaceable Components</h2>
+<h2 id="_replaceable_components">15. Replaceable Components</h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1683,7 +1744,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_contribute">15. Contribute</h2>
+<h2 id="_contribute">16. Contribute</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Find some incorrect information or want to contribute an additional section?</p>
@@ -1696,7 +1757,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-07 12:11:25 -0600
+Last updated 2020-01-10 10:11:41 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

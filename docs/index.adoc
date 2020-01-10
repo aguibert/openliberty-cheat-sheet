@@ -303,7 +303,7 @@ RUN configure.sh
 
 There are also base layers using Java 11 and 13 which can be found here: https://hub.docker.com/r/openliberty/open-liberty[OpenLiberty Docker Hub]
 
-== Supported Java SE versions
+== Supported Java versions
 
 OpenLiberty is currently supported on Java SE 8, 11, and 13. Official documentation can be found here: https://openliberty.io/docs/ref/general/#java-se.html[JavaSE support]
 
@@ -482,7 +482,7 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 </dataSource>
 ----
 
-== Messaging
+== Messaging (JMS)
 
 Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics. 
 
@@ -748,6 +748,30 @@ public class SecuredServiceEndpoint {
 ----
 
 For more details see this guide: https://openliberty.io/guides/microprofile-jwt.html[Securing microservices with JWTs]
+
+== Integration Testing
+
+There are two primary frameworks available to help make testing your Liberty applications easier:
+
+=== MicroShed Testing
+
+- Ideal for testing apps that run in Docker containers
+- Ideal for testing REST endpoints
+- Ideal for testing apps that depend on other services (e.g. database or another HTTP-based service)
+- Ideal for black-box testing
+- OpenLiberty guide available here: https://openliberty.io/guides/microshed-testing.html[Testing a MicroProfile or Jakarta EE application]
+
+See the https://microshed.org/microshed-testing/[MicroShed Testing] website for full documentation
+
+=== Arquillian
+
+- Ideal for grey-box testing
+- Ideal for testing apps that are not in containers
+- Works with JUnit 4, JUnit 5, and TestNG (MicroShed only works with JUnit 5)
+- OpenLiberty guide available here: https://openliberty.io/guides/arquillian-managed.html[Testing microservices with the Arquillian managed container]
+
+
+See http://arquillian.org/docs/[arquillian.org] for full documentation
 
 == Included OSS Components
 
