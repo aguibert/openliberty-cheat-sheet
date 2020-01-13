@@ -488,12 +488,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_derby_in_memory_db">10.7. Derby (in-memory DB)</a></li>
 </ul>
 </li>
-<li><a href="#_messaging_jms">11. Messaging (JMS)</a>
+<li><a href="#_messaging">11. Messaging</a>
 <ul class="sectlevel2">
 <li><a href="#_jms_server">11.1. JMS Server</a></li>
 <li><a href="#_jms_client">11.2. JMS Client</a></li>
 <li><a href="#_ibm_mq_client">11.3. IBM MQ Client</a></li>
-<li><a href="#_producing_and_consuming_messages">11.4. Producing and Consuming Messages</a></li>
+<li><a href="#_exchanging_jms_messages">11.4. Exchanging JMS Messages</a></li>
+<li><a href="#_reactive_messaging">11.5. Reactive Messaging</a></li>
 </ul>
 </li>
 <li><a href="#_security">12. Security</a>
@@ -1258,7 +1259,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_messaging_jms">11. Messaging (JMS)</h2>
+<h2 id="_messaging">11. Messaging</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics.</p>
@@ -1363,7 +1364,7 @@ RUN configure.sh</code></pre>
 <div class="sect2">
 <h3 id="_ibm_mq_client">11.3. IBM MQ Client</h3>
 <div class="paragraph">
-<p>Liberty can connect to IBM MQ servers and other JMS servers (e.g. ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don&#8217;t need the <code>wasJmsClient</code> feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.</p>
+<p>Liberty can connect to IBM MQ servers and other messaging servers (e.g. ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don&#8217;t need the <code>wasJmsClient</code> feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.</p>
 </div>
 <div class="listingblock">
 <div class="title">server.xml</div>
@@ -1414,7 +1415,7 @@ RUN configure.sh</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_producing_and_consuming_messages">11.4. Producing and Consuming Messages</h3>
+<h3 id="_exchanging_jms_messages">11.4. Exchanging JMS Messages</h3>
 <div class="paragraph">
 <p>Regardless of how you configure your administered objects and what server they connect to, you will access them within your application in the same way. Obtain the destination and connection factory using JNDI, then use the connection factory to create a connection, use the connection to create a session, and use the session to create a producer and/or consumer that can interact with the destination.</p>
 </div>
@@ -1446,6 +1447,18 @@ consumer.close();
 session.close();
 conn.close();</code></pre>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_reactive_messaging">11.5. Reactive Messaging</h3>
+<div class="paragraph">
+<p>MicroProfile Reactive Messaging (<code>mpReactiveMessaging-1.0</code>) provides a very easy-to-use way to send, receive, and process messages and is well-suited to writing applications that process streams of events.</p>
+</div>
+<div class="paragraph">
+<p>MP Reactive Messaging is a different messaging API than the traditional JMS API. However, many of the same messaging engines (such as Kafka) can be used.</p>
+</div>
+<div class="paragraph">
+<p>This blog post provides an excellent overview of the feature: <a href="https://openliberty.io/blog/2019/09/13/microprofile-reactive-messaging.html">Sending and receiving messages between microservices with MicroProfile Reactive Messaging</a></p>
 </div>
 </div>
 </div>
@@ -1774,7 +1787,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-13 14:41:19 -0600
+Last updated 2020-01-13 14:52:10 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

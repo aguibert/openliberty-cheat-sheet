@@ -497,7 +497,7 @@ link:https://mvnrepository.com/artifact/com.oracle.ojdbc/ojdbc8_g[image:https://
 </dataSource>
 ----
 
-== Messaging (JMS)
+== Messaging
 
 Applications can pass messages among themselves with the Java Message Service (JMS) APIs. These APIs allow applications to produce messages that are placed on a destination and/or consuming messages from a destination. Liberty can act as a server of JMS destinations or it can connect to another server to access those destinations. JMS defines two core types of destinations: queues, and topics. 
 
@@ -573,7 +573,7 @@ Liberty can provide administered objects for queues and topics that applications
 ----
 
 === IBM MQ Client
-Liberty can connect to IBM MQ servers and other JMS servers (e.g. ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don't need the `wasJmsClient` feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.
+Liberty can connect to IBM MQ servers and other messaging servers (e.g. ActiveMQ or RabbitMQ) with the appropriate resource adapter. You don't need the `wasJmsClient` feature to connect to these servers. Be sure to read the documentation for your resource adapter and ensure it is configured properly to connect to the server. The following example will use IBM MQ.
 
 .server.xml
 [source,xml]
@@ -620,7 +620,7 @@ docker run -it --rm=true --name mq-liberty \
            ibmcom/mq:9.1.4.0
 ----
 
-=== Producing and Consuming Messages
+=== Exchanging JMS Messages
 
 Regardless of how you configure your administered objects and what server they connect to, you will access them within your application in the same way. Obtain the destination and connection factory using JNDI, then use the connection factory to create a connection, use the connection to create a session, and use the session to create a producer and/or consumer that can interact with the destination.
 
@@ -652,6 +652,14 @@ consumer.close();
 session.close();
 conn.close();
 ----
+
+=== Reactive Messaging
+
+MicroProfile Reactive Messaging (`mpReactiveMessaging-1.0`) provides a very easy-to-use way to send, receive, and process messages and is well-suited to writing applications that process streams of events.
+
+MP Reactive Messaging is a different messaging API than the traditional JMS API. However, many of the same messaging engines (such as Kafka) can be used.
+
+This blog post provides an excellent overview of the feature: https://openliberty.io/blog/2019/09/13/microprofile-reactive-messaging.html[Sending and receiving messages between microservices with MicroProfile Reactive Messaging]
 
 == Security
 
