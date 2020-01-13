@@ -352,6 +352,9 @@ For a complete walkthrough, see this blog post: https://openliberty.io/blog/2019
 
 === PostgreSQL
 
+JDBC driver available at: 
+link:https://mvnrepository.com/artifact/org.postgresql/postgresql[image:https://img.shields.io/maven-central/v/org.postgresql/postgresql.svg?label=Maven%20Central[PostgreSQL]]
+
 .server.xml
 [source,xml]
 ----
@@ -378,6 +381,9 @@ docker run -it --rm=true --memory-swappiness=0 --ulimit memlock=-1:-1 \
 ----
 
 === IBM DB2
+
+JDBC driver available at: 
+link:https://mvnrepository.com/artifact/com.ibm.db2/jcc[image:https://img.shields.io/maven-central/v/com.ibm.db2/jcc.svg?label=Maven%20Central[DB2]]
 
 .server.xml
 [source,xml]
@@ -409,6 +415,9 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 === Microsoft SQL Server
 
+JDBC driver available at: 
+link:https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc[image:https://img.shields.io/maven-central/v/com.microsoft.sqlserver/mssql-jdbc.svg?label=Maven%20Central[SQLServer]]
+
 .server.xml
 [source,xml]
 ----
@@ -436,6 +445,9 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 
 === MySQL
 
+JDBC driver available at: 
+link:https://mvnrepository.com/artifact/mysql/mysql-connector-java[image:https://img.shields.io/maven-central/v/mysql/mysql-connector-java.svg?label=Maven%20Central[MySQL]]
+
 .server.xml
 [source,xml]
 ----
@@ -462,6 +474,9 @@ docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
 ----
 
 === Oracle
+
+JDBC driver available at: 
+link:https://mvnrepository.com/artifact/com.oracle.ojdbc/ojdbc8_g[image:https://img.shields.io/maven-central/v/com.oracle.ojdbc/ojdbc8_g.svg?label=Maven%20Central[Oracle]]
 
 .server.xml
 [source,xml]
@@ -567,6 +582,7 @@ Liberty can connect to IBM MQ servers and other JMS servers (e.g. ActiveMQ or Ra
     <feature>jms-2.0</feature>
 </featureManager>
 
+<!-- The IBM MQ resource adapter is available here:  -->
 <resourceAdapter id="mqJmsRa" location="/path/to/wmq.jmsra.rar">
     <classloader apiTypeVisibility="+third-party"/>
 </resourceAdapter>
@@ -588,6 +604,9 @@ Liberty can connect to IBM MQ servers and other JMS servers (e.g. ActiveMQ or Ra
 </jmsTopic>
 ----
 
+The MQ resource adapter is available at:
+link:https://mvnrepository.com/artifact/com.ibm.mq/wmq.jmsra[image:https://img.shields.io/maven-central/v/com.ibm.mq/wmq.jmsra.svg?label=Maven%20Central[MQ]]
+
 To run an MQ Docker container locally:
 
 [source,shell]
@@ -600,11 +619,6 @@ docker run -it --rm=true --name mq-liberty \
            -p 9443:9443 \
            ibmcom/mq:9.1.4.0
 ----
-
-The `wmq.jmsra.rar` file needed to connect to MQ can be found in the running Docker container using the command 
-
-[source, shell]
-docker cp mq-liberty:/opt/mqm/java/lib/jca/wmq.jmsra.rar /destination/folder
 
 === Producing and Consuming Messages
 
