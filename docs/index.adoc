@@ -303,6 +303,8 @@ RUN configure.sh
 
 There are also base layers using Java 11 and 13 which can be found here: https://hub.docker.com/r/openliberty/open-liberty[OpenLiberty Docker Hub]
 
+For complete documentation on OpenLiberty Docker containers, see: https://github.com/OpenLiberty/ci.docker[OpenLiberty/ci.docker Github]
+
 == Supported Java versions
 
 OpenLiberty is currently supported on Java SE 8, 11, and 13. Official documentation can be found here: https://openliberty.io/docs/ref/general/#java-se.html[JavaSE support]
