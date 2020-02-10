@@ -463,7 +463,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_dynamic_configuration">4.1. Dynamic Configuration</a></li>
 <li><a href="#_variable_substitution">4.2. Variable Substitution</a></li>
 <li><a href="#_predefined_variables">4.3. Predefined Variables</a></li>
-<li><a href="#_configuration_secrets">4.4. Configuration Secrets</a></li>
+<li><a href="#_microprofile_config">4.4. MicroProfile Config</a></li>
+<li><a href="#_configuration_secrets">4.5. Configuration Secrets</a></li>
 </ul>
 </li>
 <li><a href="#_features">5. Features</a>
@@ -738,7 +739,49 @@ public class HelloController {
 </div>
 </div>
 <div class="sect2">
-<h3 id="_configuration_secrets">4.4. Configuration Secrets</h3>
+<h3 id="_microprofile_config">4.4. MicroProfile Config</h3>
+<div class="paragraph">
+<p><a href="https://github.com/eclipse/microprofile-config">MicroProfile Configuration</a> is a simple yet powerful way to externalize
+configuration in any application.</p>
+</div>
+<div class="paragraph">
+<p>In OpenLiberty, there are 4 builtin configuration sources:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>System Properties, jvm.options, or bootstrap.properties (ordinal = 400)</p>
+</li>
+<li>
+<p>Environment variables or server.env (ordinal = 300)</p>
+</li>
+<li>
+<p>Inside application at <code>/META-INF/microprofile-config.properties</code> (ordinal = 100)</p>
+</li>
+<li>
+<p>Annotation <code>@ConfigProperty</code> with <code>defaultValue</code> (no ordinal)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>To inject a config property into your application (regardless of the configuration source) you can use the following code:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="java" class="language-java hljs">@ApplicationScoped
+public class MyService {
+
+    @Inject
+    @ConfigProperty(name = "foo", defaultValue = "bar")
+    String fooProperty;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For more info, see this OpenLiberty guide: <a href="https://openliberty.io/guides/microprofile-config-intro.html">Separating configuration from code in microservices</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_configuration_secrets">4.5. Configuration Secrets</h3>
 <div class="paragraph">
 <p>If you are running your application in Kubernetes, you don&#8217;t want to have credentials exposed as simple environment variables, and you certainly don&#8217;t want them checked in with the rest of your application source code!</p>
 </div>
@@ -1790,7 +1833,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-01-29 11:58:44 -0600
+Last updated 2020-02-10 08:58:25 -0600
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

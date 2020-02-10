@@ -138,6 +138,31 @@ Default values, specified in server config, are only used if no other value can 
 - `${server.config.dir}` - the directory that server config is stored in. Defaults to ${wlp.user.dir}/servers/${wlp.server.name}.
 - `${server.output.dir}` - the directory that the server writes the workarea, logs and other runtime generated files to. Defaults to ${server.config.dir}.
 
+=== MicroProfile Config
+
+https://github.com/eclipse/microprofile-config[MicroProfile Configuration] is a simple yet powerful way to externalize 
+configuration in any application. 
+
+In OpenLiberty, there are 4 builtin configuration sources:
+
+1. System Properties, jvm.options, or bootstrap.properties (ordinal = 400)
+2. Environment variables or server.env (ordinal = 300)
+3. Inside application at `/META-INF/microprofile-config.properties` (ordinal = 100)
+4. Annotation `@ConfigProperty` with `defaultValue` (no ordinal)
+
+To inject a config property into your application (regardless of the configuration source) you can use the following code:
+
+[source,java]
+----
+@ApplicationScoped
+public class MyService {
+
+    @Inject
+    @ConfigProperty(name = "foo", defaultValue = "bar")
+    String fooProperty;
+----
+
+For more info, see this OpenLiberty guide: https://openliberty.io/guides/microprofile-config-intro.html[Separating configuration from code in microservices]
 
 === Configuration Secrets
 
