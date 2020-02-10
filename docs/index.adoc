@@ -143,12 +143,13 @@ Default values, specified in server config, are only used if no other value can 
 https://github.com/eclipse/microprofile-config[MicroProfile Configuration] is a simple yet powerful way to externalize 
 configuration in any application. 
 
-In OpenLiberty, there are 4 builtin configuration sources:
+In OpenLiberty, there are 5 builtin configuration sources:
 
-1. System Properties, jvm.options, or bootstrap.properties (ordinal = 400)
-2. Environment variables or server.env (ordinal = 300)
-3. Inside application at `/META-INF/microprofile-config.properties` (ordinal = 100)
-4. Annotation `@ConfigProperty` with `defaultValue` (no ordinal)
+1. A `<variable name="..." value="..."/>` element in server.xml (ordinal = 500)
+2. System Properties, jvm.options, or bootstrap.properties (ordinal = 400)
+3. Environment variables or server.env (ordinal = 300)
+4. Inside application at `/META-INF/microprofile-config.properties` (ordinal = 100)
+5. Annotation `@ConfigProperty` with `defaultValue` (no ordinal)
 
 To inject a config property into your application (regardless of the configuration source) you can use the following code:
 
