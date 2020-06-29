@@ -270,6 +270,10 @@ Some of the essential maven commands are:
 - `mvn liberty:start`: Starts your Liberty server in the background
 - `mvn liberty:stop`: Stops your Liberty server that was started using `liberty:start`
 
+Create an application using an https://github.com/OpenLiberty/ci.maven#archetypes[OpenLiberty Maven archetype]:
+
+- Servlet/JSP web application: `mvn archetype:generate -DarchetypeGroupId=io.openliberty.tools -DarchetypeArtifactId=liberty-archetype-webapp -DarchetypeVersion=3.2.2 -DgroupId=com.example -DartifactId=myapp -Dversion=1.0-SNAPSHOT -B`
+
 Also see:
 
 - https://github.com/OpenLiberty/ci.maven[Liberty Maven Plugin source code and documentation]
