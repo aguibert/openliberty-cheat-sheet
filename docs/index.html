@@ -997,6 +997,16 @@ You cannot mix Java EE 7 and 8 features in the same server.xml!
 </ul>
 </div>
 <div class="paragraph">
+<p>Create an application using an <a href="https://github.com/OpenLiberty/ci.maven#archetypes">OpenLiberty Maven archetype</a>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Servlet/JSP web application: <code>mvn archetype:generate -DarchetypeGroupId=io.openliberty.tools -DarchetypeArtifactId=liberty-archetype-webapp -DarchetypeVersion=3.2.2 -DgroupId=com.example -DartifactId=myapp -Dversion=1.0-SNAPSHOT -B</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
 <p>Also see:</p>
 </div>
 <div class="ulist">
@@ -1846,7 +1856,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-02-10 10:20:19 -0600
+Last updated 2020-06-29 09:55:29 -0700
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
