@@ -1126,7 +1126,7 @@ RUN configure.sh</code></pre>
     &lt;feature&gt;jdbc-4.2&lt;/feature&gt;
 &lt;/featureManager&gt;
 
-&lt;library id="driver-library"&gt;
+&lt;library id="jdbcLib"&gt;
     &lt;fileset dir="/path/to/driver/dir" includes="*.jar"/&gt;
 &lt;/library&gt;</code></pre>
 </div>
@@ -1173,7 +1173,7 @@ RUN configure.sh</code></pre>
 <div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
-    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+    &lt;jdbcDriver libraryRef="jdbcLib"/&gt;
     &lt;properties.postgresql serverName="localhost" portNumber="5432"
                 databaseName="myDB"
                 user="exampleUser"
@@ -1205,12 +1205,12 @@ RUN configure.sh</code></pre>
 <div class="listingblock">
 <div class="title">server.xml</div>
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
-    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+<pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/test"&gt;
+    &lt;jdbcDriver libraryRef="jdbcLib"/&gt;
     &lt;properties.db2.jcc serverName="localhost" portNumber="50000"
-                databaseName="myDB"
-                user="exampleUser"
-                password="examplePassword"/&gt;
+                databaseName="test"
+                user="db2inst1"
+                password="foobar1234"/&gt;
 
 &lt;/dataSource&gt;</code></pre>
 </div>
@@ -1223,9 +1223,9 @@ RUN configure.sh</code></pre>
 <pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name db2-liberty \
            -e AUTOCONFIG=false -e ARCHIVE_LOGS=false -e LICENSE=accept \
-           -e DBNAME=myDB \
-           -e DB2INSTANCE=exampleUser \
-           -e DB2INST1_PASSWORD=examplePassword \
+           -e DBNAME=test \
+           -e DB2INSTANCE=db2inst1 \
+           -e DB2INST1_PASSWORD=foobar1234 \
            -p 50000:50000 \
            --privileged \
            ibmcom/db2:11.5.0.0a</code></pre>
@@ -1242,10 +1242,10 @@ RUN configure.sh</code></pre>
 <div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
-    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+    &lt;jdbcDriver libraryRef="jdbcLib"/&gt;
     &lt;properties.microsoft.sqlserver serverName="localhost" portNumber="1433"
-                databaseName="myDB"
-                user="SA"
+                databaseName="tempdb"
+                user="sa"
                 password="examplePassw0rd"/&gt;
 
 &lt;/dataSource&gt;</code></pre>
@@ -1259,7 +1259,7 @@ RUN configure.sh</code></pre>
 <pre class="highlightjs highlight"><code data-lang="shell" class="language-shell hljs">docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mssql-liberty \
            -e ACCEPT_EULA=Y \
-           -e SA_PASSWORD=examplePass0ord \
+           -e SA_PASSWORD=examplePassw0rd \
            -p 1433:1433 \
            mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04</code></pre>
 </div>
@@ -1275,7 +1275,7 @@ RUN configure.sh</code></pre>
 <div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
-    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+    &lt;jdbcDriver libraryRef="jdbcLib"/&gt;
     &lt;properties serverName="localhost" portNumber="3306"
                 databaseName="myDb"
                 user="exampleUser"
@@ -1308,7 +1308,7 @@ RUN configure.sh</code></pre>
 <div class="title">server.xml</div>
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
-    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+    &lt;jdbcDriver libraryRef="jdbcLib"/&gt;
     &lt;properties.oracle URL="jdbc:oracle:thin:@//localhost:1521/myDB"/&gt;
 &lt;/dataSource&gt;</code></pre>
 </div>
@@ -1316,10 +1316,14 @@ RUN configure.sh</code></pre>
 </div>
 <div class="sect2">
 <h3 id="_derby_in_memory_db">10.7. Derby (in-memory DB)</h3>
+<div class="paragraph">
+<p>JDBC driver available at:
+<a href="https://mvnrepository.com/artifact/org.apache.derby/derby/10.14.2.0">Maven Central</a></p>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="xml" class="language-xml hljs">&lt;dataSource id="DefaultDataSource" jndiName="jdbc/myDB"&gt;
-    &lt;jdbcDriver libraryRef="driver-library"/&gt;
+    &lt;jdbcDriver libraryRef="jdbcLib"/&gt;
     &lt;properties.derby.embedded databaseName="memory:myDB" createDatabase="create"/&gt;
 &lt;/dataSource&gt;</code></pre>
 </div>
@@ -1856,7 +1860,7 @@ public class SecuredServiceEndpoint {</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2020-06-29 09:55:29 -0700
+Last updated 2020-10-14 11:41:58 -0500
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

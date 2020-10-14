@@ -350,7 +350,7 @@ This is the most common base configuration for using a JDBC DataSource (or JPA) 
     <feature>jdbc-4.2</feature>
 </featureManager>
   
-<library id="driver-library">
+<library id="jdbcLib">
     <fileset dir="/path/to/driver/dir" includes="*.jar"/>
 </library>
 ----
@@ -391,7 +391,7 @@ link:https://mvnrepository.com/artifact/org.postgresql/postgresql[image:https://
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
-    <jdbcDriver libraryRef="driver-library"/>
+    <jdbcDriver libraryRef="jdbcLib"/>
     <properties.postgresql serverName="localhost" portNumber="5432"
                 databaseName="myDB"
                 user="exampleUser"
@@ -420,12 +420,12 @@ link:https://mvnrepository.com/artifact/com.ibm.db2/jcc[image:https://img.shield
 .server.xml
 [source,xml]
 ----
-<dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
-    <jdbcDriver libraryRef="driver-library"/>
+<dataSource id="DefaultDataSource" jndiName="jdbc/test">
+    <jdbcDriver libraryRef="jdbcLib"/>
     <properties.db2.jcc serverName="localhost" portNumber="50000"
-                databaseName="myDB"
-                user="exampleUser"
-                password="examplePassword"/>
+                databaseName="test"
+                user="db2inst1"
+                password="foobar1234"/>
 
 </dataSource>
 ----
@@ -437,9 +437,9 @@ To run a DB2 Docker container locally:
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name db2-liberty \
            -e AUTOCONFIG=false -e ARCHIVE_LOGS=false -e LICENSE=accept \ 
-           -e DBNAME=myDB \
-           -e DB2INSTANCE=exampleUser \
-           -e DB2INST1_PASSWORD=examplePassword \
+           -e DBNAME=test \
+           -e DB2INSTANCE=db2inst1 \
+           -e DB2INST1_PASSWORD=foobar1234 \
            -p 50000:50000 \
            --privileged \
            ibmcom/db2:11.5.0.0a
@@ -454,10 +454,10 @@ link:https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc[image
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
-    <jdbcDriver libraryRef="driver-library"/>
+    <jdbcDriver libraryRef="jdbcLib"/>
     <properties.microsoft.sqlserver serverName="localhost" portNumber="1433"
-                databaseName="myDB"
-                user="SA"
+                databaseName="tempdb"
+                user="sa"
                 password="examplePassw0rd"/>
 
 </dataSource>
@@ -470,7 +470,7 @@ To run a SQL Server Docker container locally:
 docker run --ulimit memlock=-1:-1 -it --rm=true --memory-swappiness=0 \
            --name mssql-liberty \
            -e ACCEPT_EULA=Y \
-           -e SA_PASSWORD=examplePass0ord \
+           -e SA_PASSWORD=examplePassw0rd \
            -p 1433:1433 \
            mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
 ----
@@ -484,7 +484,7 @@ link:https://mvnrepository.com/artifact/mysql/mysql-connector-java[image:https:/
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
-    <jdbcDriver libraryRef="driver-library"/>
+    <jdbcDriver libraryRef="jdbcLib"/>
     <properties serverName="localhost" portNumber="3306"
                 databaseName="myDb"
                 user="exampleUser"
@@ -514,17 +514,20 @@ link:https://mvnrepository.com/artifact/com.oracle.ojdbc/ojdbc8_g[image:https://
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
-    <jdbcDriver libraryRef="driver-library"/>
+    <jdbcDriver libraryRef="jdbcLib"/>
     <properties.oracle URL="jdbc:oracle:thin:@//localhost:1521/myDB"/>
 </dataSource>
 ----
 
 === Derby (in-memory DB)
 
+JDBC driver available at: 
+link:https://mvnrepository.com/artifact/org.apache.derby/derby/10.14.2.0[Maven Central]
+
 [source,xml]
 ----
 <dataSource id="DefaultDataSource" jndiName="jdbc/myDB">
-    <jdbcDriver libraryRef="driver-library"/>
+    <jdbcDriver libraryRef="jdbcLib"/>
     <properties.derby.embedded databaseName="memory:myDB" createDatabase="create"/>
 </dataSource>
 ----
